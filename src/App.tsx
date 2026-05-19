@@ -3,17 +3,17 @@ import { type FormEvent, useState } from 'react';
 import { isSupabaseConfigured, supabase } from './lib/supabase';
 
 const navLinks = [
-  { label: 'About us', href: '#about' },
+  { label: 'About Us', href: '#about' },
   { label: 'Solution', href: '#solution' },
   { label: 'Opportunities', href: '#opportunities' },
-  { label: 'How it works', href: '#how-it-works' },
+  { label: 'How It Works', href: '#how-it-works' },
   { label: 'FAQ', href: '#faq' },
   { label: 'Vision', href: '#vision' },
   { label: 'Join', href: '#join' },
 ];
 
 const stats = [
-  { value: '3 steps', label: 'Account, verification, investment' },
+  { value: '4 steps', label: 'Account, verification, selection, tracking' },
   { value: 'Real assets', label: 'Property-backed opportunities' },
   { value: 'Global', label: 'Built for local and diaspora investors' },
 ];
@@ -21,7 +21,7 @@ const stats = [
 const benefits = [
   { icon: CircleDollarSign, title: 'Accessible investment', description: 'Invest with smaller amounts instead of waiting years to afford a full deposit or entire property.' },
   { icon: Building2, title: 'Real-world assets', description: 'Every opportunity is connected to tangible property, making the investment easier to understand and track.' },
-  { icon: ShieldCheck, title: 'Trust-first structure', description: 'Verification, compliance checks, and transparent reporting create a more responsible investor environment.' },
+  { icon: ShieldCheck, title: 'Trust-first platform', description: 'Verification, compliance checks, and transparent reporting create a more responsible investor environment.' },
   { icon: Globe2, title: 'Cross-border access', description: 'Diaspora communities can explore structured property pathways back home or across international markets.' },
 ];
 
@@ -80,8 +80,8 @@ const faqs = [
     answer: 'No. Property can rise or fall in value, rental income can vary, and investors may lose money. Changers should present risks as clearly as potential benefits.',
   },
   {
-    question: 'What will Supabase be used for?',
-    answer: 'Supabase can store early interest forms, property listings, team profiles, FAQs, and later secure investor dashboard data once authentication rules are designed.',
+    question: 'How will my information be stored?',
+    answer: 'Your information will be stored securely to support onboarding, investor communication, and future platform features. Security, privacy, and controlled access will be built into the platform as it grows.',
   },
   {
     question: 'Why fractional ownership?',
@@ -123,7 +123,7 @@ function Logo() {
       <LogoMark />
       <span>
         <strong>Changers</strong>
-        <small>Property block by block</small>
+        <small>Own property, one block at a time</small>
       </span>
     </a>
   );
@@ -139,7 +139,7 @@ function Header() {
         <nav className="desktop-nav" aria-label="Main navigation">
           {navLinks.map((link) => <a key={link.href} href={link.href}>{link.label}</a>)}
         </nav>
-        <a className="header-cta" href="#join">Start investing <ArrowRight size={16} /></a>
+        <a className="header-cta" href="#join">Join the waitlist <ArrowRight size={16} /></a>
         <button className="menu-button" onClick={() => setOpen((value) => !value)} aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open}>
           {open ? <X size={22} /> : <Menu size={22} />}
         </button>
@@ -147,7 +147,7 @@ function Header() {
       {open && (
         <nav className="mobile-nav" aria-label="Mobile navigation">
           {navLinks.map((link) => <a key={link.href} href={link.href} onClick={() => setOpen(false)}>{link.label}</a>)}
-          <a className="mobile-cta" href="#join" onClick={() => setOpen(false)}>Start investing <ArrowRight size={16} /></a>
+          <a className="mobile-cta" href="#join" onClick={() => setOpen(false)}>Join the waitlist <ArrowRight size={16} /></a>
         </nav>
       )}
     </header>
@@ -163,11 +163,12 @@ function Hero() {
         <div className="hero-copy">
           <p className="eyebrow"><Landmark size={16} /> Fractional property ownership</p>
           <h1>Own property. One block at a time.</h1>
-          <p className="hero-lede">Changers helps everyday people invest in real property through smaller, transparent ownership portions. No huge deposit, no confusing gatekeeping, just a clearer route into long-term property wealth.</p>
+          <p className="hero-lede">Changers helps everyday people invest in real property through smaller, transparent ownership portions. No large deposits, no unnecessary barriers - just a clearer route into long-term property wealth.</p>
           <div className="hero-actions">
-            <a className="primary-button" href="#join">Join Changers <ArrowRight size={17} /></a>
+            <a className="primary-button" href="#join">Join the waitlist <ArrowRight size={17} /></a>
             <a className="secondary-button" href="#how-it-works">See how it works</a>
           </div>
+          <p className="hero-disclaimer">A developing property investment platform currently welcoming early interest. No payment is collected at this stage; investment access will follow verification, risk review, and compliance checks.</p>
           <div className="stats-row">
             {stats.map((stat, index) => (
               <div
@@ -331,13 +332,13 @@ function PropertyOpportunities() {
     <section id="opportunities" className="section opportunities-section">
       <div className="section-heading two-col">
         <div>
-          <p className="section-label">Property opportunities</p>
-          <h2>Preview the kind of real assets Changers is being built around.</h2>
+          <p className="section-label">Sample property opportunities</p>
+          <h2>Sample Property Opportunities</h2>
         </div>
         <p>
-          These are sample opportunity cards for the website experience. Live property listings
-          should only be published after due diligence, documentation, risk review, and compliance
-          checks are complete.
+          These sample cards illustrate the type of property opportunities Changers may feature in
+          the future. Live listings will only be published after due diligence, documentation, and
+          compliance checks are complete.
         </p>
       </div>
 
@@ -371,7 +372,7 @@ function HowItWorks() {
   return (
     <section id="how-it-works" className="section dark-section">
       <div className="section-heading narrow">
-        <p className="section-label gold">How it works</p>
+        <p className="section-label gold">How It Works</p>
         <h2>Owning property, one block at a time.</h2>
         <p>The first experience should feel simple, secure, and beginner-friendly. Changers turns a complex property journey into a clear digital flow.</p>
       </div>
@@ -388,7 +389,7 @@ function HowItWorks() {
         ))}
       </div>
       <div className="quote-row">
-        <blockquote>"I never thought property ownership would be possible for me, but Changers made it a reality. Their innovative approach is a breath of fresh air in an outdated system."<cite>Aisha Rahman, new property investor</cite></blockquote>
+        <blockquote>"We are building Changers for people who believe property ownership should feel understandable, transparent, and within reach."<cite>Changers founder statement</cite></blockquote>
         <div className="income-card"><p className="section-label gold">After investing</p><h3>Rental income and appreciation potential.</h3><p>As properties generate rental income, investors may receive distributions based on their ownership share. If property values rise over time, the investor&apos;s share may also grow in value.</p></div>
       </div>
     </section>
@@ -419,9 +420,9 @@ function FAQSection() {
       </div>
       <div className="community-strip">
         <blockquote>
-          "Changers has opened up property investment for me in a way I never thought possible. The
-          transparency and ease of use are truly game-changing."
-          <cite>A satisfied Changers investor from Doncaster</cite>
+          "A platform like Changers should make the property journey clearer, safer, and more
+          accessible for everyday people."
+          <cite>Illustrative community vision</cite>
         </blockquote>
       </div>
     </section>
@@ -438,7 +439,7 @@ function MeetTeam() {
         </div>
         <p>
           These role cards show the team structure Changers should make visible as the platform
-          grows. Real names, photos, credentials, and responsibilities can be added when ready.
+          grows. Full team profiles will be added as the platform develops.
         </p>
       </div>
       <div className="team-grid">
@@ -543,7 +544,7 @@ function VisionJoin() {
           <div>
             <p className="section-label">Join Changers</p>
             <h2>Your path to property ownership starts here.</h2>
-            <p>Create your account, complete verification, and become part of a community building long-term financial security through property.</p>
+            <p>Register your interest and become part of a community building long-term financial security through property. Verification, risk information, and onboarding will come before investment access.</p>
             <div className="audience-grid">{audiences.map((audience) => <span key={audience.label}><audience.icon size={20} /> {audience.label}</span>)}</div>
           </div>
           <form className="join-form" onSubmit={handleJoinSubmit}>
@@ -554,7 +555,7 @@ function VisionJoin() {
             <label className="full-width">Message<textarea name="message" placeholder="Tell us what you want to achieve with property ownership." /></label>
             <button type="submit" disabled={joinStatus === 'loading'}>
               {joinStatus === 'loading' ? <span className="button-spinner" aria-hidden /> : <CheckCircle2 size={17} />}
-              {joinStatus === 'success' ? 'Interest received' : joinStatus === 'loading' ? 'Sending securely' : joinStatus === 'error' ? 'Try again' : 'Create your Changers account'}
+              {joinStatus === 'success' ? 'Interest received' : joinStatus === 'loading' ? 'Sending securely' : joinStatus === 'error' ? 'Try again' : 'Register your interest'}
               {joinStatus === 'idle' && <ArrowRight size={17} />}
             </button>
             {joinStatus === 'success' && (
@@ -566,7 +567,7 @@ function VisionJoin() {
             {joinStatus === 'error' && (
               <div className="join-error" role="alert">
                 <AlertTriangle size={18} />
-                We could not save this yet. Please check the Supabase table and environment key.
+                We could not save this yet. Please try again or contact the Changers team.
               </div>
             )}
             <p className="join-trust-note">No payment is collected here. Verification, risk information, and compliance checks come before investing.</p>
