@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="Changers logo mark">
+  <defs>
+    <linearGradient id="bg" x1="18" y1="14" x2="112" y2="118" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#102F2A"/>
+      <stop offset="1" stop-color="#173B35"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#000000" flood-opacity="0.16"/>
+    </filter>
+  </defs>
+  <rect x="8" y="8" width="112" height="112" rx="26" fill="url(#bg)"/>
+  <g filter="url(#shadow)">
+    <!-- C-shaped ownership blocks -->
+    <rect x="34" y="30" width="22" height="22" rx="5" fill="#F4C76B"/>
+    <rect x="60" y="30" width="22" height="22" rx="5" fill="#F8F4ED"/>
+    <rect x="34" y="56" width="22" height="22" rx="5" fill="#F8F4ED"/>
+    <rect x="34" y="82" width="22" height="22" rx="5" fill="#F4C76B"/>
+    <rect x="60" y="82" width="22" height="22" rx="5" fill="#F8F4ED"/>
+    <rect x="86" y="82" width="10" height="22" rx="5" fill="#F4C76B" opacity="0.92"/>
+    <!-- roof/growth line -->
+    <path d="M58 66 L72 54 L94 54" fill="none" stroke="#F4C76B" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M86 48 L96 54 L86 60" fill="none" stroke="#F4C76B" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>
