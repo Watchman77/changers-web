@@ -1,5 +1,5 @@
-import { ArrowRight, BadgeCheck, BarChart3, Blocks, Briefcase, Building2, CheckCircle2, CircleDollarSign, FileCheck2, Globe2, Home, Landmark, LockKeyhole, Menu, Plane, Rocket, ShieldCheck, UserRoundPlus, Users, WalletCards, X } from 'lucide-react';
-import { useState } from 'react';
+import { AlertTriangle, ArrowRight, BadgeCheck, BarChart3, Briefcase, Building2, CheckCircle2, CircleDollarSign, FileCheck2, Globe2, Home, Landmark, LockKeyhole, Menu, Plane, Rocket, ShieldCheck, UserRoundPlus, Users, WalletCards, X } from 'lucide-react';
+import { type FormEvent, useState } from 'react';
 
 const navLinks = [
   { label: 'About us', href: '#about' },
@@ -37,10 +37,23 @@ const audiences = [
   { icon: Users, label: 'Middle-income earners' },
 ];
 
+function LogoMark() {
+  return (
+    <span className="logo-mark animated-logo" aria-hidden>
+      <span className="logo-block block-one" />
+      <span className="logo-block block-two" />
+      <span className="logo-block block-three" />
+      <span className="logo-block block-four" />
+      <span className="logo-block block-five" />
+      <span className="logo-growth-line" />
+    </span>
+  );
+}
+
 function Logo() {
   return (
     <a href="#top" className="logo" aria-label="Changers home">
-      <span className="logo-mark"><Blocks size={24} aria-hidden /></span>
+      <LogoMark />
       <span>
         <strong>Changers</strong>
         <small>Property block by block</small>
@@ -89,7 +102,16 @@ function Hero() {
             <a className="secondary-button" href="#how-it-works">See how it works</a>
           </div>
           <div className="stats-row">
-            {stats.map((stat) => <div className="stat-card" key={stat.value}><strong>{stat.value}</strong><span>{stat.label}</span></div>)}
+            {stats.map((stat, index) => (
+              <div
+                className="stat-card"
+                key={stat.value}
+                style={{ animationDelay: `${450 + index * 140}ms` }}
+              >
+                <strong>{stat.value}</strong>
+                <span>{stat.label}</span>
+              </div>
+            ))}
           </div>
         </div>
         <div className="hero-panel">
@@ -245,8 +267,17 @@ function HowItWorks() {
         <h2>Owning property, one block at a time.</h2>
         <p>The first experience should feel simple, secure, and beginner-friendly. Changers turns a complex property journey into a clear digital flow.</p>
       </div>
-      <div className="step-grid">
-        {steps.map((step, index) => <article className="step-card" key={step.title}><div><step.icon size={26} /><span>0{index + 1}</span></div><h3>{step.title}</h3><p>{step.description}</p></article>)}
+      <div className="timeline-grid">
+        {steps.map((step, index) => (
+          <article className="step-card timeline-card" key={step.title} style={{ animationDelay: `${index * 130}ms` }}>
+            <div className="timeline-card-top">
+              <span className="timeline-icon"><step.icon size={24} /></span>
+              <span className="timeline-number">0{index + 1}</span>
+            </div>
+            <h3>{step.title}</h3>
+            <p>{step.description}</p>
+          </article>
+        ))}
       </div>
       <div className="quote-row">
         <blockquote>"I never thought property ownership would be possible for me, but Changers made it a reality. Their innovative approach is a breath of fresh air in an outdated system."<cite>Aisha Rahman, new property investor</cite></blockquote>
@@ -256,7 +287,57 @@ function HowItWorks() {
   );
 }
 
+function SecurityRisk() {
+  return (
+    <section className="section security-section" id="security">
+      <div className="security-grid">
+        <div>
+          <p className="section-label">Security and responsibility</p>
+          <h2>Trust must be designed before transactions begin.</h2>
+          <p>
+            Changers should treat investor confidence, data protection, and risk communication as
+            core product features. Payment collection should only launch after the right legal,
+            compliance, and financial-promotion review is complete.
+          </p>
+        </div>
+        <div className="security-card-grid">
+          <article className="security-card">
+            <LockKeyhole size={24} />
+            <h3>Secure onboarding</h3>
+            <p>Identity checks, investor categorisation, and protected account access should sit before any investment action.</p>
+          </article>
+          <article className="security-card">
+            <FileCheck2 size={24} />
+            <h3>Clear documentation</h3>
+            <p>Property details, ownership structure, fees, and reporting should be plain, visible, and easy to compare.</p>
+          </article>
+          <article className="security-card risk-card">
+            <AlertTriangle size={24} />
+            <h3>Capital at risk</h3>
+            <p>Property investments can fall in value. Returns are not guaranteed, and investors may lose money.</p>
+          </article>
+          <article className="security-card">
+            <ShieldCheck size={24} />
+            <h3>Compliance review</h3>
+            <p>Investment promotions, payments, and onboarding journeys should be reviewed before public launch.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function VisionJoin() {
+  const [joinStatus, setJoinStatus] = useState<'idle' | 'loading' | 'success'>('idle');
+
+  const handleJoinSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (joinStatus === 'loading') return;
+
+    setJoinStatus('loading');
+    window.setTimeout(() => setJoinStatus('success'), 950);
+  };
+
   return (
     <>
       <section id="vision" className="section warm-section vision-section">
@@ -273,14 +354,24 @@ function VisionJoin() {
             <p>Create your account, complete verification, and become part of a community building long-term financial security through property.</p>
             <div className="audience-grid">{audiences.map((audience) => <span key={audience.label}><audience.icon size={20} /> {audience.label}</span>)}</div>
           </div>
-          <form className="join-form">
-            <label>Name<input placeholder="Your full name" /></label>
-            <label>Email address<input type="email" placeholder="you@example.com" /></label>
-            <label>Country of residence<input placeholder="United Kingdom" /></label>
+          <form className="join-form" onSubmit={handleJoinSubmit}>
+            <label>Name<input placeholder="Your full name" required /></label>
+            <label>Email address<input type="email" placeholder="you@example.com" required /></label>
+            <label>Country of residence<input placeholder="United Kingdom" required /></label>
             <label>Investor type<select><option>First-time investor</option><option>Young professional</option><option>Diaspora investor</option><option>Entrepreneur</option></select></label>
             <label className="full-width">Message<textarea placeholder="Tell us what you want to achieve with property ownership." /></label>
-            <button type="button">Create your Changers account <ArrowRight size={17} /></button>
-            <p>This form is ready to connect to Supabase when the investor database is added.</p>
+            <button type="submit" disabled={joinStatus === 'loading'}>
+              {joinStatus === 'loading' ? <span className="button-spinner" aria-hidden /> : <CheckCircle2 size={17} />}
+              {joinStatus === 'success' ? 'Interest received' : joinStatus === 'loading' ? 'Sending securely' : 'Create your Changers account'}
+              {joinStatus === 'idle' && <ArrowRight size={17} />}
+            </button>
+            {joinStatus === 'success' && (
+              <div className="join-success" role="status">
+                <CheckCircle2 size={18} />
+                Thanks. Your interest has been received. We will connect this to secure onboarding next.
+              </div>
+            )}
+            <p className="join-trust-note">No payment is collected here. Verification, risk information, and compliance checks come before investing.</p>
           </form>
         </div>
       </section>
@@ -293,5 +384,5 @@ function Footer() {
 }
 
 export default function App() {
-  return <><Header /><main><Hero /><AboutUs /><Solution /><HowItWorks /><VisionJoin /></main><Footer /></>;
+  return <><Header /><main><Hero /><AboutUs /><Solution /><HowItWorks /><SecurityRisk /><VisionJoin /></main><Footer /></>;
 }
