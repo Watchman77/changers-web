@@ -1,10 +1,12 @@
-import { AlertTriangle, ArrowRight, BadgeCheck, BarChart3, Briefcase, Building2, CheckCircle2, CircleDollarSign, FileCheck2, Globe2, Home, Landmark, LockKeyhole, Menu, Plane, Rocket, ShieldCheck, UserRoundPlus, Users, WalletCards, X } from 'lucide-react';
+import { AlertTriangle, ArrowRight, BadgeCheck, BarChart3, Briefcase, Building2, CheckCircle2, CircleDollarSign, FileCheck2, Globe2, HelpCircle, Home, Landmark, LockKeyhole, MapPin, Menu, Plane, Rocket, ShieldCheck, UserRoundPlus, Users, WalletCards, X } from 'lucide-react';
 import { type FormEvent, useState } from 'react';
 
 const navLinks = [
   { label: 'About us', href: '#about' },
   { label: 'Solution', href: '#solution' },
+  { label: 'Opportunities', href: '#opportunities' },
   { label: 'How it works', href: '#how-it-works' },
+  { label: 'FAQ', href: '#faq' },
   { label: 'Vision', href: '#vision' },
   { label: 'Join', href: '#join' },
 ];
@@ -35,6 +37,70 @@ const audiences = [
   { icon: Plane, label: 'Diaspora communities' },
   { icon: Rocket, label: 'Entrepreneurs' },
   { icon: Users, label: 'Middle-income earners' },
+];
+
+const propertyOpportunities = [
+  {
+    title: 'Doncaster rental apartment',
+    location: 'Doncaster, UK',
+    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=80',
+    status: 'Coming soon',
+    target: 'Target raise: to be confirmed',
+    income: 'Rental income: projected range pending review',
+    progress: 64,
+  },
+  {
+    title: 'Regional family home portfolio',
+    location: 'South Yorkshire, UK',
+    image: 'https://images.unsplash.com/photo-1605146769289-440113cc3d00?auto=format&fit=crop&w=900&q=80',
+    status: 'Under review',
+    target: 'Target raise: sample listing',
+    income: 'Yield information will be published with risk notes',
+    progress: 42,
+  },
+  {
+    title: 'Diaspora gateway property',
+    location: 'International pipeline',
+    image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=900&q=80',
+    status: 'Research stage',
+    target: 'Target raise: not open',
+    income: 'Documentation required before investor access',
+    progress: 28,
+  },
+];
+
+const faqs = [
+  {
+    question: 'Can I invest today?',
+    answer: 'Not yet. This website is preparing the Changers proposition. Payment collection should wait until onboarding, compliance, legal structure, and risk disclosures are ready.',
+  },
+  {
+    question: 'Are returns guaranteed?',
+    answer: 'No. Property can rise or fall in value, rental income can vary, and investors may lose money. Changers should present risks as clearly as potential benefits.',
+  },
+  {
+    question: 'What will Supabase be used for?',
+    answer: 'Supabase can store early interest forms, property listings, team profiles, FAQs, and later secure investor dashboard data once authentication rules are designed.',
+  },
+  {
+    question: 'Why fractional ownership?',
+    answer: 'Fractional models can lower the entry barrier by allowing people to participate in property opportunities with smaller ownership portions.',
+  },
+];
+
+const teamRoles = [
+  {
+    title: 'Founder and product vision',
+    description: 'Leads the mission, investor experience, and long-term direction for inclusive property ownership.',
+  },
+  {
+    title: 'Property operations',
+    description: 'Supports sourcing, due diligence coordination, property management standards, and reporting workflows.',
+  },
+  {
+    title: 'Compliance and governance',
+    description: 'A dedicated advisory role for financial promotions, risk communication, data protection, and investor safeguards.',
+  },
 ];
 
 function LogoMark() {
@@ -259,6 +325,47 @@ function Solution() {
   );
 }
 
+function PropertyOpportunities() {
+  return (
+    <section id="opportunities" className="section opportunities-section">
+      <div className="section-heading two-col">
+        <div>
+          <p className="section-label">Property opportunities</p>
+          <h2>Preview the kind of real assets Changers is being built around.</h2>
+        </div>
+        <p>
+          These are sample opportunity cards for the website experience. Live property listings
+          should only be published after due diligence, documentation, risk review, and compliance
+          checks are complete.
+        </p>
+      </div>
+
+      <div className="property-grid">
+        {propertyOpportunities.map((property) => (
+          <article className="property-card lift-card" key={property.title}>
+            <div className="property-image">
+              <img src={property.image} alt={property.title} />
+              <span>{property.status}</span>
+            </div>
+            <div className="property-card-body">
+              <p><MapPin size={16} /> {property.location}</p>
+              <h3>{property.title}</h3>
+              <div className="property-meta">
+                <span>{property.target}</span>
+                <span>{property.income}</span>
+              </div>
+              <div className="property-progress" aria-label={`${property.progress}% readiness indicator`}>
+                <span style={{ width: `${property.progress}%` }} />
+              </div>
+              <small>Preview only. Not an offer or invitation to invest.</small>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function HowItWorks() {
   return (
     <section id="how-it-works" className="section dark-section">
@@ -282,6 +389,65 @@ function HowItWorks() {
       <div className="quote-row">
         <blockquote>"I never thought property ownership would be possible for me, but Changers made it a reality. Their innovative approach is a breath of fresh air in an outdated system."<cite>Aisha Rahman, new property investor</cite></blockquote>
         <div className="income-card"><p className="section-label gold">After investing</p><h3>Rental income and appreciation potential.</h3><p>As properties generate rental income, investors may receive distributions based on their ownership share. If property values rise over time, the investor&apos;s share may also grow in value.</p></div>
+      </div>
+    </section>
+  );
+}
+
+function FAQSection() {
+  return (
+    <section id="faq" className="section faq-section">
+      <div className="section-heading two-col">
+        <div>
+          <p className="section-label">FAQ</p>
+          <h2>Clear answers before anyone joins the investor journey.</h2>
+        </div>
+        <p>
+          Good investor communication should remove confusion, not create pressure. These questions
+          help set expectations while the platform is still being prepared.
+        </p>
+      </div>
+      <div className="faq-grid">
+        {faqs.map((faq) => (
+          <article className="faq-card lift-card" key={faq.question}>
+            <HelpCircle size={24} />
+            <h3>{faq.question}</h3>
+            <p>{faq.answer}</p>
+          </article>
+        ))}
+      </div>
+      <div className="community-strip">
+        <blockquote>
+          "Changers has opened up property investment for me in a way I never thought possible. The
+          transparency and ease of use are truly game-changing."
+          <cite>A satisfied Changers investor from Doncaster</cite>
+        </blockquote>
+      </div>
+    </section>
+  );
+}
+
+function MeetTeam() {
+  return (
+    <section className="section team-section" id="team">
+      <div className="section-heading two-col">
+        <div>
+          <p className="section-label">Meet the team</p>
+          <h2>A platform like this needs people, process, and accountability.</h2>
+        </div>
+        <p>
+          These role cards show the team structure Changers should make visible as the platform
+          grows. Real names, photos, credentials, and responsibilities can be added when ready.
+        </p>
+      </div>
+      <div className="team-grid">
+        {teamRoles.map((role) => (
+          <article className="team-card lift-card" key={role.title}>
+            <div className="team-avatar"><Users size={26} /></div>
+            <h3>{role.title}</h3>
+            <p>{role.description}</p>
+          </article>
+        ))}
       </div>
     </section>
   );
@@ -384,5 +550,5 @@ function Footer() {
 }
 
 export default function App() {
-  return <><Header /><main><Hero /><AboutUs /><Solution /><HowItWorks /><SecurityRisk /><VisionJoin /></main><Footer /></>;
+  return <><Header /><main><Hero /><AboutUs /><Solution /><PropertyOpportunities /><HowItWorks /><SecurityRisk /><FAQSection /><MeetTeam /><VisionJoin /></main><Footer /></>;
 }
