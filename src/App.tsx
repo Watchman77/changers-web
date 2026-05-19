@@ -420,9 +420,8 @@ function FAQSection() {
       </div>
       <div className="community-strip">
         <blockquote>
-          "A platform like Changers should make the property journey clearer, safer, and more
-          accessible for everyday people."
-          <cite>Illustrative community vision</cite>
+          "Property ownership should feel clear, secure, and within reach for everyday people."
+          <cite>Changers community vision</cite>
         </blockquote>
       </div>
     </section>
