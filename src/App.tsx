@@ -2,6 +2,7 @@ import { ArrowRight, BadgeCheck, BarChart3, Blocks, Briefcase, Building2, CheckC
 import { useState } from 'react';
 
 const navLinks = [
+  { label: 'About us', href: '#about' },
   { label: 'Solution', href: '#solution' },
   { label: 'How it works', href: '#how-it-works' },
   { label: 'Vision', href: '#vision' },
@@ -104,6 +105,26 @@ function Hero() {
   );
 }
 
+function AboutUs() {
+  return (
+    <section id="about" className="about-showcase" aria-labelledby="about-title">
+      <div className="about-frame">
+        <img
+          src="/about-us.png"
+          alt="About Us: Building property access for everyday people. Changers helps everyday investors, young professionals, entrepreneurs, and diaspora communities invest in real assets through smaller ownership blocks."
+        />
+      </div>
+      <div className="about-accessible-copy">
+        <h2 id="about-title">About Us</h2>
+        <p>
+          Changers is a community-driven property investment platform that makes real estate
+          ownership simple, inclusive, and rewarding.
+        </p>
+      </div>
+    </section>
+  );
+}
+
 function Solution() {
   return (
     <section id="solution" className="section warm-section">
@@ -189,5 +210,5 @@ function Footer() {
 }
 
 export default function App() {
-  return <><Header /><main><Hero /><Solution /><HowItWorks /><VisionJoin /></main><Footer /></>;
+  return <><Header /><main><Hero /><AboutUs /><Solution /><HowItWorks /><VisionJoin /></main><Footer /></>;
 }
