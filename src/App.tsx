@@ -106,20 +106,103 @@ function Hero() {
 }
 
 function AboutUs() {
+  const [activeCard, setActiveCard] = useState('story');
+
+  const aboutCards = [
+    {
+      id: 'story',
+      icon: FileCheck2,
+      title: 'Our Story',
+      text: 'Changers was founded to break down the barriers to property ownership and create a fairer, more inclusive way to build generational wealth.',
+    },
+    {
+      id: 'mission',
+      icon: Rocket,
+      title: 'Our Mission',
+      text: 'To democratise property investment by offering simple, transparent, and accessible ownership opportunities one block at a time.',
+    },
+    {
+      id: 'promise',
+      icon: ShieldCheck,
+      title: 'Our Promise',
+      text: 'We are committed to transparency, security, and community so people can invest with confidence and grow with purpose.',
+    },
+  ];
+
+  const active = aboutCards.find((card) => card.id === activeCard) ?? aboutCards[0];
+
   return (
-    <section id="about" className="about-showcase" aria-labelledby="about-title">
-      <div className="about-frame">
-        <img
-          src="/about-us.png"
-          alt="About Us: Building property access for everyday people. Changers helps everyday investors, young professionals, entrepreneurs, and diaspora communities invest in real assets through smaller ownership blocks."
-        />
-      </div>
-      <div className="about-accessible-copy">
-        <h2 id="about-title">About Us</h2>
-        <p>
-          Changers is a community-driven property investment platform that makes real estate
-          ownership simple, inclusive, and rewarding.
-        </p>
+    <section className="section about-interactive" id="about">
+      <div className="about-grid">
+        <div className="about-copy">
+          <p className="section-label">About Changers</p>
+          <h2>Building property access for everyday people.</h2>
+          <p>
+            Changers is a community-driven property investment platform that makes real estate
+            ownership simple, inclusive, and rewarding. We help everyday investors, young
+            professionals, entrepreneurs, and diaspora communities invest in real assets through
+            smaller ownership blocks.
+          </p>
+
+          <div className="about-tabs" role="tablist" aria-label="About Changers">
+            {aboutCards.map((card) => {
+              const Icon = card.icon;
+
+              return (
+                <button
+                  key={card.id}
+                  className={activeCard === card.id ? 'about-tab active' : 'about-tab'}
+                  onClick={() => setActiveCard(card.id)}
+                  type="button"
+                  role="tab"
+                  aria-selected={activeCard === card.id}
+                  aria-controls="about-detail"
+                >
+                  <Icon size={22} aria-hidden />
+                  <span>{card.title}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          <div className="about-detail-card" id="about-detail" role="tabpanel">
+            <h3>{active.title}</h3>
+            <p>{active.text}</p>
+          </div>
+
+          <a className="primary-button about-cta" href="#join">
+            Join Changers <ArrowRight size={18} />
+          </a>
+        </div>
+
+        <div className="about-visual-card" aria-label="Property ownership visual">
+          <div className="about-building-card">
+            <img
+              src="https://images.unsplash.com/photo-1605146769289-440113cc3d00?auto=format&fit=crop&w=1200&q=80"
+              alt="Modern apartment building representing property ownership"
+            />
+          </div>
+
+          <div className="floating-card floating-card-top">
+            <BarChart3 size={24} aria-hidden />
+            <strong>Growth-focused</strong>
+            <span>Long-term property value</span>
+          </div>
+
+          <div className="floating-card floating-card-bottom">
+            <ShieldCheck size={24} aria-hidden />
+            <strong>Trust-first</strong>
+            <span>Verification and transparency</span>
+          </div>
+
+          <div className="block-cluster" aria-hidden>
+            <span />
+            <span />
+            <span />
+            <span />
+            <span />
+          </div>
+        </div>
       </div>
     </section>
   );
