@@ -1,4 +1,4 @@
-import { AlertTriangle, ArrowRight, BadgeCheck, BarChart3, Briefcase, Building2, CheckCircle2, CircleDollarSign, FileCheck2, Globe2, HelpCircle, Home, Landmark, LockKeyhole, MapPin, Menu, Plane, Rocket, ShieldCheck, UserRoundPlus, Users, WalletCards, X } from 'lucide-react';
+import { AlertTriangle, ArrowRight, BadgeCheck, BarChart3, Briefcase, Building2, CheckCircle2, CircleDollarSign, FileCheck2, Globe2, HelpCircle, Home, Landmark, LockKeyhole, MapPin, Menu, MessageCircle, Plane, Rocket, Send, ShieldCheck, UserRoundPlus, Users, WalletCards, X } from 'lucide-react';
 import { type FormEvent, useState } from 'react';
 import { isSupabaseConfigured, supabase } from './lib/supabase';
 
@@ -101,6 +101,29 @@ const teamRoles = [
   {
     title: 'Compliance and governance',
     description: 'A dedicated advisory role for financial promotions, risk communication, data protection, and investor safeguards.',
+  },
+];
+
+const chatPrompts = [
+  {
+    question: 'Can I invest today?',
+    answer: 'Changers is currently welcoming early interest. No payment is collected at this stage, and investment access will only follow verification, risk review, and compliance checks.',
+  },
+  {
+    question: 'How does Changers work?',
+    answer: 'Changers is being built around four steps: register interest, complete verification, choose a property opportunity when live, and track performance through clear reporting.',
+  },
+  {
+    question: 'Is my money safe?',
+    answer: 'All investment carries risk. Changers is designed around real assets, transparent documentation, secure onboarding, and clear risk information before any investment access opens.',
+  },
+  {
+    question: 'Who is Changers for?',
+    answer: 'Changers is built for everyday investors, young professionals, diaspora communities, entrepreneurs, and people looking for a clearer route into property ownership.',
+  },
+  {
+    question: 'How do I join?',
+    answer: 'Use the join form to register your interest. The Changers team can then keep you updated as onboarding, property opportunities, and platform features develop.',
   },
 ];
 
@@ -577,10 +600,77 @@ function VisionJoin() {
   );
 }
 
+function Chatbot() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [activePrompt, setActivePrompt] = useState(chatPrompts[0]);
+
+  return (
+    <aside className={isOpen ? 'chatbot open' : 'chatbot'} aria-label="Ask Changers assistant">
+      {isOpen && (
+        <div className="chatbot-panel">
+          <div className="chatbot-header">
+            <div>
+              <span>Ask Changers</span>
+              <strong>Property questions, simple answers.</strong>
+            </div>
+            <button type="button" onClick={() => setIsOpen(false)} aria-label="Close Ask Changers">
+              <X size={18} />
+            </button>
+          </div>
+
+          <div className="chatbot-body">
+            <div className="chat-message bot">
+              <LogoMark />
+              <p>Hi, I can help explain Changers, the waitlist, risks, and how the platform is being prepared.</p>
+            </div>
+
+            <div className="chatbot-prompts" aria-label="Quick chatbot questions">
+              {chatPrompts.map((prompt) => (
+                <button
+                  key={prompt.question}
+                  type="button"
+                  className={activePrompt.question === prompt.question ? 'active' : ''}
+                  onClick={() => setActivePrompt(prompt)}
+                >
+                  {prompt.question}
+                </button>
+              ))}
+            </div>
+
+            <div className="chat-message answer" aria-live="polite">
+              <strong>{activePrompt.question}</strong>
+              <p>{activePrompt.answer}</p>
+            </div>
+          </div>
+
+          <div className="chatbot-footer">
+            <a href="#join" onClick={() => setIsOpen(false)}>
+              Register your interest <ArrowRight size={16} />
+            </a>
+            <p>No payments are collected through this assistant.</p>
+          </div>
+        </div>
+      )}
+
+      <button
+        type="button"
+        className="chatbot-toggle"
+        onClick={() => setIsOpen((value) => !value)}
+        aria-label={isOpen ? 'Close Ask Changers' : 'Open Ask Changers'}
+        aria-expanded={isOpen}
+      >
+        {isOpen ? <X size={22} /> : <MessageCircle size={22} />}
+        <span>{isOpen ? 'Close' : 'Ask Changers'}</span>
+        {!isOpen && <Send size={16} />}
+      </button>
+    </aside>
+  );
+}
+
 function Footer() {
   return <footer className="footer"><Logo /><nav>{navLinks.map((link) => <a key={link.href} href={link.href}>{link.label}</a>)}</nav><p>© 2026 Changers</p></footer>;
 }
 
 export default function App() {
-  return <><Header /><main><Hero /><AboutUs /><Solution /><PropertyOpportunities /><HowItWorks /><SecurityRisk /><FAQSection /><MeetTeam /><VisionJoin /></main><Footer /></>;
+  return <><Header /><main><Hero /><AboutUs /><Solution /><PropertyOpportunities /><HowItWorks /><SecurityRisk /><FAQSection /><MeetTeam /><VisionJoin /></main><Chatbot /><Footer /></>;
 }
