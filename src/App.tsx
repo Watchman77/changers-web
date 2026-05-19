@@ -182,7 +182,7 @@ function Hero() {
           </div>
         </div>
         <div className="hero-panel">
-          <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1200&q=80" alt="Investor reviewing property finance documents" />
+          <img src="/hero-blocks.png" alt="People assembling modular property blocks into a modern building model" />
           <div className="panel-features">
             {[{ icon: WalletCards, label: 'Lower entry point' }, { icon: LockKeyhole, label: 'Secure verification' }, { icon: CheckCircle2, label: 'Clear reporting' }].map((item) => (
               <div key={item.label}><item.icon size={20} /><strong>{item.label}</strong></div>
