@@ -1,5 +1,6 @@
 import { AlertTriangle, ArrowRight, BadgeCheck, BarChart3, Briefcase, Building2, CheckCircle2, CircleDollarSign, FileCheck2, Globe2, HelpCircle, Home, Landmark, LockKeyhole, MapPin, Menu, Plane, Rocket, ShieldCheck, UserRoundPlus, Users, WalletCards, X } from 'lucide-react';
 import { type FormEvent, useState } from 'react';
+import { isSupabaseConfigured, supabase } from './lib/supabase';
 
 const navLinks = [
   { label: 'About us', href: '#about' },
@@ -494,14 +495,39 @@ function SecurityRisk() {
 }
 
 function VisionJoin() {
-  const [joinStatus, setJoinStatus] = useState<'idle' | 'loading' | 'success'>('idle');
+  const [joinStatus, setJoinStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
-  const handleJoinSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleJoinSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (joinStatus === 'loading') return;
 
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const lead = {
+      name: String(formData.get('name') ?? ''),
+      email: String(formData.get('email') ?? ''),
+      country: String(formData.get('country') ?? ''),
+      investor_type: String(formData.get('investor_type') ?? 'First-time investor'),
+      message: String(formData.get('message') ?? ''),
+    };
+
     setJoinStatus('loading');
-    window.setTimeout(() => setJoinStatus('success'), 950);
+
+    if (!isSupabaseConfigured || !supabase) {
+      window.setTimeout(() => setJoinStatus('success'), 650);
+      return;
+    }
+
+    const { error } = await supabase.from('leads').insert(lead);
+
+    if (error) {
+      console.error('Lead submission failed', error);
+      setJoinStatus('error');
+      return;
+    }
+
+    form.reset();
+    setJoinStatus('success');
   };
 
   return (
@@ -521,20 +547,26 @@ function VisionJoin() {
             <div className="audience-grid">{audiences.map((audience) => <span key={audience.label}><audience.icon size={20} /> {audience.label}</span>)}</div>
           </div>
           <form className="join-form" onSubmit={handleJoinSubmit}>
-            <label>Name<input placeholder="Your full name" required /></label>
-            <label>Email address<input type="email" placeholder="you@example.com" required /></label>
-            <label>Country of residence<input placeholder="United Kingdom" required /></label>
-            <label>Investor type<select><option>First-time investor</option><option>Young professional</option><option>Diaspora investor</option><option>Entrepreneur</option></select></label>
-            <label className="full-width">Message<textarea placeholder="Tell us what you want to achieve with property ownership." /></label>
+            <label>Name<input name="name" placeholder="Your full name" required /></label>
+            <label>Email address<input name="email" type="email" placeholder="you@example.com" required /></label>
+            <label>Country of residence<input name="country" placeholder="United Kingdom" required /></label>
+            <label>Investor type<select name="investor_type"><option>First-time investor</option><option>Young professional</option><option>Diaspora investor</option><option>Entrepreneur</option></select></label>
+            <label className="full-width">Message<textarea name="message" placeholder="Tell us what you want to achieve with property ownership." /></label>
             <button type="submit" disabled={joinStatus === 'loading'}>
               {joinStatus === 'loading' ? <span className="button-spinner" aria-hidden /> : <CheckCircle2 size={17} />}
-              {joinStatus === 'success' ? 'Interest received' : joinStatus === 'loading' ? 'Sending securely' : 'Create your Changers account'}
+              {joinStatus === 'success' ? 'Interest received' : joinStatus === 'loading' ? 'Sending securely' : joinStatus === 'error' ? 'Try again' : 'Create your Changers account'}
               {joinStatus === 'idle' && <ArrowRight size={17} />}
             </button>
             {joinStatus === 'success' && (
               <div className="join-success" role="status">
                 <CheckCircle2 size={18} />
-                Thanks. Your interest has been received. We will connect this to secure onboarding next.
+                Thanks. Your interest has been received. Secure onboarding comes next.
+              </div>
+            )}
+            {joinStatus === 'error' && (
+              <div className="join-error" role="alert">
+                <AlertTriangle size={18} />
+                We could not save this yet. Please check the Supabase table and environment key.
               </div>
             )}
             <p className="join-trust-note">No payment is collected here. Verification, risk information, and compliance checks come before investing.</p>

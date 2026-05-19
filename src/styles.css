@@ -164,7 +164,7 @@ blockquote cite { display: block; margin-top: 24px; color: #7a2418; font-size: 1
 .join-form label { display: grid; gap: 8px; font-weight: 850; }
 .join-form input, .join-form select, .join-form textarea { width: 100%; border: 1px solid #d8c8b2; border-radius: 6px; background: white; color: #17231f; padding: 13px 14px; outline: none; transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease; }
 .join-form input:focus, .join-form select:focus, .join-form textarea:focus { border-color: #f4c76b; box-shadow: 0 0 0 4px rgba(244,199,107,.28), 0 12px 26px rgba(16, 47, 42, .08); transform: translateY(-1px); }
-.full-width, .join-form button, .join-form > p, .join-success { grid-column: 1 / -1; }
+.full-width, .join-form button, .join-form > p, .join-success, .join-error { grid-column: 1 / -1; }
 .join-form textarea { min-height: 132px; resize: vertical; }
 .join-form button { justify-self: start; }
 .join-form button:disabled { cursor: wait; opacity: .82; }
@@ -172,6 +172,8 @@ blockquote cite { display: block; margin-top: 24px; color: #7a2418; font-size: 1
 .button-spinner { width: 17px; height: 17px; border: 2px solid rgba(255,255,255,.35); border-top-color: white; border-radius: 50%; animation: spin .75s linear infinite; }
 .join-success { display: flex; align-items: center; gap: 10px; border: 1px solid rgba(16, 47, 42, .18); border-radius: 8px; background: #edf7f0; color: #173b35; padding: 13px 14px; font-weight: 850; animation: successPop .36s ease-out; }
 .join-success svg { color: #1e7d55; flex: 0 0 auto; }
+.join-error { display: flex; align-items: center; gap: 10px; border: 1px solid rgba(122, 36, 24, .28); border-radius: 8px; background: #fff3ee; color: #7a2418; padding: 13px 14px; font-weight: 850; animation: successPop .36s ease-out; }
+.join-error svg { color: #7a2418; flex: 0 0 auto; }
 .join-trust-note { display: flex; align-items: center; gap: 8px; }
 .footer { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 32px 24px; background: #102f2a; color: white; }
 .footer .logo-mark { background: #f4c76b; color: #17231f; }
