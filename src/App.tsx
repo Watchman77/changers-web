@@ -73,11 +73,11 @@ const propertyOpportunities = [
 const faqs = [
   {
     question: 'Can I invest today?',
-    answer: 'Not yet. This website is preparing the Changers proposition. Payment collection should wait until onboarding, compliance, legal structure, and risk disclosures are ready.',
+    answer: 'Not yet. Changers is currently welcoming early interest while onboarding, compliance, legal structure, and risk disclosures are prepared.',
   },
   {
     question: 'Are returns guaranteed?',
-    answer: 'No. Property can rise or fall in value, rental income can vary, and investors may lose money. Changers should present risks as clearly as potential benefits.',
+    answer: 'No. Property can rise or fall in value, rental income can vary, and investors may lose money. Changers presents risk information clearly before investment access opens.',
   },
   {
     question: 'How will my information be stored?',
@@ -304,7 +304,7 @@ function Solution() {
       <div className="section-heading two-col">
         <div>
           <p className="section-label">The solution</p>
-          <h2>Property ownership should feel possible, not protected by old barriers.</h2>
+          <h2>Making property ownership possible beyond old barriers.</h2>
         </div>
         <p>Changers modernises property investment through secure digital infrastructure, fractional ownership models, and plain-English investor communication. It is designed for young professionals, first-time investors, entrepreneurs, middle-income earners, and diaspora communities.</p>
       </div>
@@ -374,7 +374,7 @@ function HowItWorks() {
       <div className="section-heading narrow">
         <p className="section-label gold">How It Works</p>
         <h2>Owning property, one block at a time.</h2>
-        <p>The first experience should feel simple, secure, and beginner-friendly. Changers turns a complex property journey into a clear digital flow.</p>
+        <p>Changers makes the first experience simple, secure, and beginner-friendly, turning a complex property journey into a clear digital flow.</p>
       </div>
       <div className="timeline-grid">
         {steps.map((step, index) => (
@@ -389,7 +389,7 @@ function HowItWorks() {
         ))}
       </div>
       <div className="quote-row">
-        <blockquote>"We are building Changers for people who believe property ownership should feel understandable, transparent, and within reach."<cite>Changers founder statement</cite></blockquote>
+        <blockquote>"We are building Changers to make property ownership more understandable, transparent, and within reach."<cite>Changers founder statement</cite></blockquote>
         <div className="income-card"><p className="section-label gold">After investing</p><h3>Rental income and appreciation potential.</h3><p>As properties generate rental income, investors may receive distributions based on their ownership share. If property values rise over time, the investor&apos;s share may also grow in value.</p></div>
       </div>
     </section>
@@ -405,8 +405,8 @@ function FAQSection() {
           <h2>Clear answers before anyone joins the investor journey.</h2>
         </div>
         <p>
-          Good investor communication should remove confusion, not create pressure. These questions
-          help set expectations while the platform is still being prepared.
+          Changers keeps the investor journey clear from the start. These answers explain the
+          platform status, data handling, risk position, and access model.
         </p>
       </div>
       <div className="faq-grid">
@@ -420,7 +420,7 @@ function FAQSection() {
       </div>
       <div className="community-strip">
         <blockquote>
-          "Property ownership should feel clear, secure, and within reach for everyday people."
+          "Changers is building a clearer, safer route into property ownership for everyday people."
           <cite>Changers community vision</cite>
         </blockquote>
       </div>
@@ -434,11 +434,11 @@ function MeetTeam() {
       <div className="section-heading two-col">
         <div>
           <p className="section-label">Meet the team</p>
-          <h2>A platform like this needs people, process, and accountability.</h2>
+          <h2>The people building Changers.</h2>
         </div>
         <p>
-          These role cards show the team structure Changers should make visible as the platform
-          grows. Full team profiles will be added as the platform develops.
+          Full team profiles, credentials, and responsibilities will be added as the platform
+          develops.
         </p>
       </div>
       <div className="team-grid">
@@ -460,10 +460,10 @@ function SecurityRisk() {
       <div className="security-grid">
         <div>
           <p className="section-label">Security and responsibility</p>
-          <h2>Trust must be designed before transactions begin.</h2>
+          <h2>Trust comes before transactions.</h2>
           <p>
-            Changers should treat investor confidence, data protection, and risk communication as
-            core product features. Payment collection should only launch after the right legal,
+            Changers builds investor confidence through data protection, clear risk communication,
+            and responsible onboarding. Payment collection launches only after the right legal,
             compliance, and financial-promotion review is complete.
           </p>
         </div>
@@ -471,12 +471,12 @@ function SecurityRisk() {
           <article className="security-card">
             <LockKeyhole size={24} />
             <h3>Secure onboarding</h3>
-            <p>Identity checks, investor categorisation, and protected account access should sit before any investment action.</p>
+            <p>Identity checks, investor categorisation, and protected account access come before any investment action.</p>
           </article>
           <article className="security-card">
             <FileCheck2 size={24} />
             <h3>Clear documentation</h3>
-            <p>Property details, ownership structure, fees, and reporting should be plain, visible, and easy to compare.</p>
+            <p>Property details, ownership structure, fees, and reporting stay plain, visible, and easy to compare.</p>
           </article>
           <article className="security-card risk-card">
             <AlertTriangle size={24} />
@@ -486,7 +486,7 @@ function SecurityRisk() {
           <article className="security-card">
             <ShieldCheck size={24} />
             <h3>Compliance review</h3>
-            <p>Investment promotions, payments, and onboarding journeys should be reviewed before public launch.</p>
+            <p>Investment promotions, payments, and onboarding journeys go through review before public launch.</p>
           </article>
         </div>
       </div>
