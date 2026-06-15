@@ -3,6 +3,7 @@
 -- Security model:
 -- - Website visitors can only insert join-form leads.
 -- - Website visitors cannot read, update, or delete leads.
+-- - Authenticated users can read and update only their own profile/dashboard rows.
 -- - Public property cards are readable only when marked as public.
 -- - Admin/back-office access should use Supabase Dashboard, authenticated admin tooling,
 --   or server-side service-role code only. Never expose service-role keys in the browser.
@@ -153,6 +154,125 @@ with check (
 create index if not exists leads_created_at_idx on public.leads (created_at desc);
 create index if not exists leads_email_idx on public.leads (lower(email));
 create index if not exists leads_status_idx on public.leads (status);
+
+create table if not exists public.profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  full_name text,
+  email text,
+  phone text,
+  country text,
+  investor_type text,
+  investment_interest text,
+  investment_budget text,
+  onboarding_status text not null default 'interest_registered',
+  email_verified_at timestamptz,
+  phone_verified_at timestamptz,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  constraint profiles_onboarding_status_check check (
+    onboarding_status in (
+      'interest_registered',
+      'email_verified',
+      'phone_verified',
+      'kyc_pending',
+      'kyc_in_review',
+      'approved',
+      'not_eligible'
+    )
+  )
+);
+
+alter table public.profiles
+  add column if not exists full_name text,
+  add column if not exists email text,
+  add column if not exists phone text,
+  add column if not exists country text,
+  add column if not exists investor_type text,
+  add column if not exists investment_interest text,
+  add column if not exists investment_budget text,
+  add column if not exists onboarding_status text not null default 'interest_registered',
+  add column if not exists email_verified_at timestamptz,
+  add column if not exists phone_verified_at timestamptz,
+  add column if not exists created_at timestamptz not null default now(),
+  add column if not exists updated_at timestamptz not null default now();
+
+do $$
+begin
+  if not exists (select 1 from pg_constraint where conname = 'profiles_onboarding_status_check') then
+    alter table public.profiles add constraint profiles_onboarding_status_check check (
+      onboarding_status in (
+        'interest_registered',
+        'email_verified',
+        'phone_verified',
+        'kyc_pending',
+        'kyc_in_review',
+        'approved',
+        'not_eligible'
+      )
+    ) not valid;
+  end if;
+end;
+$$;
+
+drop trigger if exists set_profiles_updated_at on public.profiles;
+create trigger set_profiles_updated_at
+before update on public.profiles
+for each row
+execute function public.set_updated_at();
+
+alter table public.profiles enable row level security;
+alter table public.profiles force row level security;
+
+drop policy if exists "Users can read own profile" on public.profiles;
+drop policy if exists "Users can insert own profile" on public.profiles;
+drop policy if exists "Users can update own profile" on public.profiles;
+
+create policy "Users can read own profile"
+on public.profiles
+for select
+to authenticated
+using (auth.uid() = id);
+
+create policy "Users can insert own profile"
+on public.profiles
+for insert
+to authenticated
+with check (auth.uid() = id);
+
+create policy "Users can update own profile"
+on public.profiles
+for update
+to authenticated
+using (auth.uid() = id)
+with check (auth.uid() = id);
+
+create index if not exists profiles_email_idx on public.profiles (lower(email));
+create index if not exists profiles_onboarding_status_idx on public.profiles (onboarding_status);
+
+create table if not exists public.dashboard_events (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users(id) on delete cascade,
+  event_type text not null,
+  title text not null,
+  detail text,
+  created_at timestamptz not null default now(),
+  constraint dashboard_events_event_type_check check (
+    event_type in ('account', 'verification', 'property', 'document', 'message')
+  )
+);
+
+alter table public.dashboard_events enable row level security;
+alter table public.dashboard_events force row level security;
+
+drop policy if exists "Users can read own dashboard events" on public.dashboard_events;
+
+create policy "Users can read own dashboard events"
+on public.dashboard_events
+for select
+to authenticated
+using (auth.uid() = user_id);
+
+create index if not exists dashboard_events_user_created_idx on public.dashboard_events (user_id, created_at desc);
 
 create table if not exists public.properties (
   id uuid primary key default gen_random_uuid(),

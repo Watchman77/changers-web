@@ -1,5 +1,6 @@
 import { AlertTriangle, ArrowRight, BadgeCheck, BarChart3, Briefcase, Building2, CheckCircle2, CircleDollarSign, FileCheck2, Globe2, HelpCircle, Home, Landmark, LockKeyhole, MapPin, Menu, MessageCircle, Plane, Rocket, Send, ShieldCheck, UserRoundPlus, Users, WalletCards, X } from 'lucide-react';
-import { type FormEvent, useState } from 'react';
+import { type FormEvent, useEffect, useState } from 'react';
+import type { User } from '@supabase/supabase-js';
 import { isSupabaseConfigured, supabase } from './lib/supabase';
 
 const navLinks = [
@@ -9,6 +10,7 @@ const navLinks = [
   { label: 'How It Works', href: '/how-it-works' },
   { label: 'Services', href: '/services' },
   { label: 'FAQ', href: '/faq' },
+  { label: 'Dashboard', href: '/dashboard' },
   { label: 'Join', href: '/join' },
 ];
 
@@ -166,6 +168,48 @@ const roadmap = [
 ];
 
 const investorTypes = ['Individual Investor', 'Institutional Investor', 'Property Owner', 'Developer', 'Strategic Partner', 'Other'];
+
+const companyDetails = {
+  name: 'CHANGERS LTD',
+  companyNumber: '17126553',
+  registeredOffice: '41 Cavalier Court, Balby, Doncaster, England, DN4 8TW',
+  correspondenceAddress: '2 Freeland Walk, Openshaw, Manchester, England, M11 2LP',
+  jurisdiction: 'England & Wales',
+  companiesHouseUrl: 'https://find-and-update.company-information.service.gov.uk/company/17126553',
+  mapUrl: 'https://www.openstreetmap.org/export/embed.html?bbox=-1.1588%2C53.4944%2C-1.1508%2C53.4994&layer=mapnik&marker=53.4969%2C-1.1548',
+};
+
+function useSupabaseUser() {
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(Boolean(isSupabaseConfigured));
+
+  useEffect(() => {
+    if (!supabase) {
+      setIsLoading(false);
+      return undefined;
+    }
+
+    let isMounted = true;
+
+    supabase.auth.getUser().then(({ data }) => {
+      if (!isMounted) return;
+      setUser(data.user);
+      setIsLoading(false);
+    });
+
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      setIsLoading(false);
+    });
+
+    return () => {
+      isMounted = false;
+      listener.subscription.unsubscribe();
+    };
+  }, []);
+
+  return { user, isLoading };
+}
 
 function LogoMark() {
   return (
@@ -608,6 +652,13 @@ function VisionJoin() {
       return;
     }
 
+    await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        emailRedirectTo: `${window.location.origin}/dashboard`,
+      },
+    });
+
     form.reset();
     setJoinStatus('success');
   };
@@ -646,7 +697,7 @@ function VisionJoin() {
             {joinStatus === 'success' && (
               <div className="join-success" role="status">
                 <CheckCircle2 size={18} />
-                Thanks. Your interest has been received. Secure onboarding comes next.
+                Thanks. Your interest has been received. Check your email for a secure verification link.
               </div>
             )}
             {joinStatus === 'error' && (
@@ -655,7 +706,7 @@ function VisionJoin() {
                 We could not save this yet. Please try again or contact the Changers team.
               </div>
             )}
-            <p className="join-trust-note">No payment is collected here. Verification, risk information, and compliance checks come before investing.</p>
+            <p className="join-trust-note">No payment is collected here. Email verification starts your account; phone verification will follow once SMS verification is enabled.</p>
           </form>
         </div>
       </section>
@@ -899,6 +950,7 @@ function TrustPage() {
           <p>The information on this website is for informational purposes only and does not constitute financial, legal, or investment advice. Investments involve risk, including potential loss of capital. Participation may be subject to eligibility requirements and applicable regulations.</p>
         </div>
       </section>
+      <CompanyDetailsSection />
     </>
   );
 }
@@ -937,6 +989,178 @@ function JoinPage() {
           ))}
         </div>
       </section>
+      <CompanyDetailsSection />
+    </>
+  );
+}
+
+function CompanyDetailsSection() {
+  return (
+    <section className="section company-section" id="company-details">
+      <div className="section-heading two-col">
+        <div>
+          <p className="section-label">Company details</p>
+          <h2>Registered in England & Wales.</h2>
+        </div>
+        <p>
+          Changers publishes its company details clearly so visitors can verify the business and
+          contact information through official records.
+        </p>
+      </div>
+      <div className="company-grid">
+        <div className="company-card">
+          <h3>{companyDetails.name}</h3>
+          <dl>
+            <div><dt>Company number</dt><dd>{companyDetails.companyNumber}</dd></div>
+            <div><dt>Registered office</dt><dd>{companyDetails.registeredOffice}</dd></div>
+            <div><dt>Correspondence address</dt><dd>{companyDetails.correspondenceAddress}</dd></div>
+            <div><dt>Jurisdiction</dt><dd>{companyDetails.jurisdiction}</dd></div>
+          </dl>
+          <a href={companyDetails.companiesHouseUrl} target="_blank" rel="noreferrer">
+            View Companies House record <ArrowRight size={16} />
+          </a>
+        </div>
+        <div className="company-map" aria-label="Map showing Changers registered office area">
+          <iframe
+            title="Changers registered office map"
+            src={companyDetails.mapUrl}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function DashboardPage() {
+  const { user, isLoading } = useSupabaseUser();
+  const [email, setEmail] = useState('');
+  const [authStatus, setAuthStatus] = useState<'idle' | 'loading' | 'sent' | 'error'>('idle');
+  const [profileStatus, setProfileStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+
+  useEffect(() => {
+    if (!supabase || !user) return;
+
+    setProfileStatus('saving');
+    supabase
+      .from('profiles')
+      .upsert({
+        id: user.id,
+        email: user.email ?? null,
+        phone: user.phone ?? null,
+        email_verified_at: user.email_confirmed_at ?? null,
+        phone_verified_at: user.phone_confirmed_at ?? null,
+      })
+      .then(({ error }) => {
+        setProfileStatus(error ? 'error' : 'saved');
+      });
+  }, [user]);
+
+  const handleEmailLogin = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!supabase || authStatus === 'loading') return;
+
+    setAuthStatus('loading');
+    const { error } = await supabase.auth.signInWithOtp({
+      email: email.trim(),
+      options: {
+        emailRedirectTo: `${window.location.origin}/dashboard`,
+      },
+    });
+
+    setAuthStatus(error ? 'error' : 'sent');
+  };
+
+  const handleSignOut = async () => {
+    await supabase?.auth.signOut();
+  };
+
+  if (!isSupabaseConfigured) {
+    return (
+      <>
+        <PageHero
+          label="Investor dashboard"
+          title="Dashboard access is being prepared."
+          text="Connect Supabase environment variables to enable verified account access and private investor dashboard records."
+        />
+        <section className="section page-section">
+          <div className="dashboard-auth-card">
+            <AlertTriangle size={24} />
+            <h2>Supabase is not configured locally.</h2>
+            <p>Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` to enable account verification.</p>
+          </div>
+        </section>
+      </>
+    );
+  }
+
+  if (isLoading) {
+    return <><PageHero label="Investor dashboard" title="Loading your dashboard." text="Checking your secure account session." /></>;
+  }
+
+  if (!user) {
+    return (
+      <>
+        <PageHero
+          label="Investor dashboard"
+          title="Verify your email to access your dashboard."
+          text="Enter the email used in the Changers join form. Supabase will send a secure magic link for account access."
+        />
+        <section className="section page-section">
+          <form className="dashboard-auth-card" onSubmit={handleEmailLogin}>
+            <label>Email address<input value={email} onChange={(event) => setEmail(event.target.value)} type="email" placeholder="you@example.com" required /></label>
+            <button type="submit" disabled={authStatus === 'loading'}>
+              {authStatus === 'loading' ? <span className="button-spinner" aria-hidden /> : <Send size={17} />}
+              Send secure verification link
+            </button>
+            {authStatus === 'sent' && <p className="dashboard-notice success">Check your inbox for the Changers dashboard link.</p>}
+            {authStatus === 'error' && <p className="dashboard-notice error">We could not send the link yet. Check your email and Supabase Auth settings.</p>}
+          </form>
+        </section>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <PageHero
+        label="Investor dashboard"
+        title="Your Changers account."
+        text="This early dashboard confirms your account access, verification status, and next onboarding steps."
+      />
+      <section className="section dashboard-page">
+        <div className="dashboard-panel">
+          <div>
+            <p className="section-label">Account</p>
+            <h2>{user.email ?? user.phone ?? 'Verified user'}</h2>
+            <p>{profileStatus === 'saved' ? 'Your private profile record is ready.' : 'Preparing your private profile record.'}</p>
+          </div>
+          <button type="button" onClick={handleSignOut}>Sign out</button>
+        </div>
+        <div className="dashboard-status-grid">
+          <article>
+            <BadgeCheck size={24} />
+            <h3>Email verification</h3>
+            <p>{user.email_confirmed_at ? 'Verified' : 'Verification pending'}</p>
+          </article>
+          <article>
+            <ShieldCheck size={24} />
+            <h3>Phone verification</h3>
+            <p>{user.phone_confirmed_at ? 'Verified' : 'SMS provider setup required'}</p>
+          </article>
+          <article>
+            <FileCheck2 size={24} />
+            <h3>KYC status</h3>
+            <p>Not started</p>
+          </article>
+          <article>
+            <Building2 size={24} />
+            <h3>Property access</h3>
+            <p>Coming after onboarding and compliance checks</p>
+          </article>
+        </div>
+      </section>
     </>
   );
 }
@@ -955,6 +1179,7 @@ function CurrentPage() {
   if (path === '/services') return <ServicesPage />;
   if (path === '/trust') return <TrustPage />;
   if (path === '/faq') return <FAQPage />;
+  if (path === '/dashboard') return <DashboardPage />;
   if (path === '/join') return <JoinPage />;
   return <NotFoundPage />;
 }
@@ -1027,7 +1252,13 @@ function Chatbot() {
 }
 
 function Footer() {
-  return <footer className="footer"><Logo /><nav>{navLinks.map((link) => <a key={link.href} href={link.href}>{link.label}</a>)}<a href="/trust">Trust</a></nav><p>© 2026 Changers</p></footer>;
+  return (
+    <footer className="footer">
+      <Logo />
+      <nav>{navLinks.map((link) => <a key={link.href} href={link.href}>{link.label}</a>)}<a href="/trust">Trust</a></nav>
+      <p>© 2026 Changers · Company No. {companyDetails.companyNumber} · {companyDetails.registeredOffice}</p>
+    </footer>
+  );
 }
 
 export default function App() {

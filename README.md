@@ -31,3 +31,5 @@ The join form writes to the private `leads` table when Supabase environment vari
 Detailed setup and security notes are in `supabase/README.md`.
 
 Never use a Supabase `service_role` key in the frontend or in Vercel client-side environment variables.
+
+The dashboard uses Supabase Auth email Magic Links. Configure allowed redirect URLs for `/dashboard` before deploying the auth-enabled version.
