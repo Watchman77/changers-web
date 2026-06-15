@@ -63,6 +63,33 @@ h2 { margin: 14px 0 0; font-size: clamp(36px, 5vw, 58px); line-height: 1.05; let
 .panel-features strong { display: block; margin-top: 12px; font-size: 14px; line-height: 1.4; }
 .section { padding: 92px 24px; }
 .section > * { max-width: 1200px; margin-left: auto; margin-right: auto; }
+.page-hero { padding: 104px 24px 76px; background: radial-gradient(circle at 88% 12%, rgba(244, 199, 107, .28), transparent 24rem), #102f2a; color: white; }
+.page-hero > * { max-width: 1040px; margin-left: auto; margin-right: auto; }
+.page-hero .section-label { color: #f4c76b; }
+.page-hero h1 { max-width: 900px; margin-top: 24px; font-size: clamp(46px, 6vw, 76px); }
+.page-hero p:not(.section-label) { margin-top: 24px; max-width: 760px; color: #efe7d9; font-size: 20px; line-height: 1.65; font-weight: 650; }
+.page-section { background: #fff; }
+.stacked-copy { display: grid; gap: 18px; }
+.stacked-copy p { margin: 0; color: #60706a; font-size: 18px; line-height: 1.75; }
+.feature-list { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+.feature-list li { border-left: 4px solid #f4c76b; background: white; padding: 14px 16px; color: #34433f; font-weight: 800; box-shadow: 0 10px 28px rgba(24, 35, 31, .06); }
+.value-grid, .service-grid, .roadmap-grid, .dashboard-grid, .membership-grid, .process-grid { display: grid; gap: 18px; }
+.value-grid { grid-template-columns: repeat(5, 1fr); margin-top: 46px; }
+.value-card, .service-card, .roadmap-card, .membership-card, .process-card { border: 1px solid #e3d6c4; border-radius: 8px; background: #fbf6ee; padding: 24px; }
+.value-card h3, .service-card h3, .membership-card h3, .process-card h3 { margin: 0 0 10px; color: #102f2a; font-size: 22px; letter-spacing: -.025em; }
+.value-card p, .service-card p, .membership-card p, .process-card p, .roadmap-card p { margin: 0; color: #60706a; line-height: 1.65; }
+.service-grid { grid-template-columns: repeat(5, 1fr); }
+.service-card { background: white; box-shadow: 0 14px 42px rgba(24, 35, 31, .07); }
+.service-card svg { color: #7a2418; margin-bottom: 18px; }
+.roadmap-section, .dashboard-preview, .membership-section { background: #fbf6ee; }
+.roadmap-grid { grid-template-columns: repeat(4, 1fr); margin-top: 46px; }
+.roadmap-card { background: white; }
+.roadmap-card span, .process-card span { display: inline-flex; align-items: center; justify-content: center; min-width: 52px; height: 32px; border-radius: 999px; background: #102f2a; color: #f4c76b; font-weight: 950; margin-bottom: 18px; }
+.dashboard-grid { grid-template-columns: repeat(4, 1fr); margin-top: 42px; }
+.dashboard-grid span { border: 1px solid rgba(244, 199, 107, .45); border-radius: 8px; background: #102f2a; color: white; padding: 24px; font-weight: 900; text-align: center; }
+.process-grid { grid-template-columns: repeat(5, 1fr); }
+.membership-grid { grid-template-columns: repeat(3, 1fr); margin-top: 42px; }
+.legal-section { background: #fff8ee; }
 .about-interactive { position: relative; overflow: hidden; background: radial-gradient(circle at 86% 10%, rgba(244, 199, 107, .24), transparent 24rem), #fbf6ee; }
 .about-grid { display: grid; grid-template-columns: .96fr 1.04fr; gap: 70px; align-items: center; }
 .about-copy > p:not(.section-label) { margin-top: 22px; color: #34433f; font-size: 18px; line-height: 1.75; }
@@ -164,8 +191,10 @@ blockquote cite { display: block; margin-top: 24px; color: #7a2418; font-size: 1
 .join-form { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; border: 1px solid #e3d6c4; border-radius: 8px; background: #f8f4ed; padding: 32px; }
 .join-form label { display: grid; gap: 8px; font-weight: 850; }
 .join-form input, .join-form select, .join-form textarea { width: 100%; border: 1px solid #d8c8b2; border-radius: 6px; background: white; color: #17231f; padding: 13px 14px; outline: none; transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease; }
+.join-form input[type="checkbox"] { width: auto; }
 .join-form input:focus, .join-form select:focus, .join-form textarea:focus { border-color: #f4c76b; box-shadow: 0 0 0 4px rgba(244,199,107,.28), 0 12px 26px rgba(16, 47, 42, .08); transform: translateY(-1px); }
 .full-width, .join-form button, .join-form > p, .join-success, .join-error { grid-column: 1 / -1; }
+.consent-field { display: flex !important; grid-template-columns: auto 1fr; align-items: center; gap: 10px !important; color: #34433f; line-height: 1.45; }
 .join-form textarea { min-height: 132px; resize: vertical; }
 .join-form button { justify-self: start; }
 .join-form button:disabled { cursor: wait; opacity: .82; }
@@ -242,7 +271,7 @@ blockquote cite { display: block; margin-top: 24px; color: #7a2418; font-size: 1
   .timeline-grid::before { left: 24px; right: auto; top: 18px; bottom: 18px; width: 2px; height: auto; background: linear-gradient(180deg, rgba(244,199,107,.9), transparent); }
   .timeline-card { padding-left: 72px; }
   .timeline-icon { position: absolute; left: 0; top: 18px; box-shadow: 0 0 0 8px #102f2a; }
-  .benefit-grid, .step-grid, .security-card-grid, .property-grid, .faq-grid, .team-grid { grid-template-columns: repeat(2, 1fr); }
+  .benefit-grid, .step-grid, .security-card-grid, .property-grid, .faq-grid, .team-grid, .value-grid, .service-grid, .roadmap-grid, .dashboard-grid, .membership-grid, .process-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 620px) {
   .header-inner { padding: 14px 16px; }
@@ -264,7 +293,9 @@ blockquote cite { display: block; margin-top: 24px; color: #7a2418; font-size: 1
   h1 { font-size: 48px; }
   .hero-lede { font-size: 18px; }
   .hero-actions, .primary-button, .secondary-button { width: 100%; }
-  .stats-row, .panel-features, .benefit-grid, .step-grid, .mini-grid, .audience-grid, .join-form, .security-card-grid, .property-grid, .faq-grid, .team-grid { grid-template-columns: 1fr; }
+  .page-hero { padding: 78px 16px 58px; }
+  .page-hero p:not(.section-label) { font-size: 18px; }
+  .stats-row, .panel-features, .benefit-grid, .step-grid, .mini-grid, .audience-grid, .join-form, .security-card-grid, .property-grid, .faq-grid, .team-grid, .value-grid, .service-grid, .roadmap-grid, .dashboard-grid, .membership-grid, .process-grid { grid-template-columns: 1fr; }
   .timeline-card { padding-left: 62px; }
   .property-image { height: 210px; }
   .trust-block > div, blockquote, .income-card, .join-form { padding: 24px; }

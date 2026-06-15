@@ -3,13 +3,13 @@ import { type FormEvent, useState } from 'react';
 import { isSupabaseConfigured, supabase } from './lib/supabase';
 
 const navLinks = [
-  { label: 'About Us', href: '#about' },
-  { label: 'Solution', href: '#solution' },
-  { label: 'Opportunities', href: '#opportunities' },
-  { label: 'How It Works', href: '#how-it-works' },
-  { label: 'FAQ', href: '#faq' },
-  { label: 'Vision', href: '#vision' },
-  { label: 'Join', href: '#join' },
+  { label: 'About Us', href: '/about' },
+  { label: 'Vision', href: '/vision' },
+  { label: 'Opportunities', href: '/opportunities' },
+  { label: 'How It Works', href: '/how-it-works' },
+  { label: 'Services', href: '/services' },
+  { label: 'FAQ', href: '/faq' },
+  { label: 'Join', href: '/join' },
 ];
 
 const stats = [
@@ -127,6 +127,46 @@ const chatPrompts = [
   },
 ];
 
+const services = [
+  {
+    title: 'Property Investment Opportunities',
+    description: 'Access curated property investment opportunities selected for income generation and long-term value.',
+  },
+  {
+    title: 'Fractional Property Ownership',
+    description: 'Participate in property ownership through structured fractional investment models.',
+  },
+  {
+    title: 'Property Portfolio Management',
+    description: 'Professionally managed property assets focused on operational efficiency and sustainable returns.',
+  },
+  {
+    title: 'Diaspora Investment Solutions',
+    description: 'Helping international investors access property opportunities with confidence and transparency.',
+  },
+  {
+    title: 'Technology Infrastructure',
+    description: 'Digital investor experiences for secure onboarding, reporting, and investment tracking.',
+  },
+];
+
+const values = [
+  ['Transparency', 'Open communication, clear reporting, and visible investor information.'],
+  ['Integrity', 'Responsible operations and professional standards across every stage.'],
+  ['Innovation', 'Modern technology that improves the property investment experience.'],
+  ['Accessibility', 'Property ownership pathways designed for more people.'],
+  ['Long-term thinking', 'Sustainable growth, real assets, and lasting value creation.'],
+];
+
+const roadmap = [
+  ['Phase 1', 'Company setup, legal structuring, initial property sourcing, and MVP platform development.'],
+  ['Phase 2', 'First investor onboarding, initial property acquisition, rental income distribution, and dashboard launch.'],
+  ['Phase 3', 'Portfolio expansion, international investor growth, technology enhancement, and marketplace development.'],
+  ['Phase 4', 'Global expansion, advanced digital infrastructure, strategic partnerships, and a scalable investment ecosystem.'],
+];
+
+const investorTypes = ['Individual Investor', 'Institutional Investor', 'Property Owner', 'Developer', 'Strategic Partner', 'Other'];
+
 function LogoMark() {
   return (
     <span className="logo-mark animated-logo" aria-hidden>
@@ -142,7 +182,7 @@ function LogoMark() {
 
 function Logo() {
   return (
-    <a href="#top" className="logo" aria-label="Changers home">
+    <a href="/" className="logo" aria-label="Changers home">
       <LogoMark />
       <span>
         <strong>Changers</strong>
@@ -162,7 +202,7 @@ function Header() {
         <nav className="desktop-nav" aria-label="Main navigation">
           {navLinks.map((link) => <a key={link.href} href={link.href}>{link.label}</a>)}
         </nav>
-        <a className="header-cta" href="#join">Join the waitlist <ArrowRight size={16} /></a>
+        <a className="header-cta" href="/join">Join the waitlist <ArrowRight size={16} /></a>
         <button className="menu-button" onClick={() => setOpen((value) => !value)} aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open}>
           {open ? <X size={22} /> : <Menu size={22} />}
         </button>
@@ -170,7 +210,7 @@ function Header() {
       {open && (
         <nav className="mobile-nav" aria-label="Mobile navigation">
           {navLinks.map((link) => <a key={link.href} href={link.href} onClick={() => setOpen(false)}>{link.label}</a>)}
-          <a className="mobile-cta" href="#join" onClick={() => setOpen(false)}>Join the waitlist <ArrowRight size={16} /></a>
+          <a className="mobile-cta" href="/join" onClick={() => setOpen(false)}>Join the waitlist <ArrowRight size={16} /></a>
         </nav>
       )}
     </header>
@@ -188,8 +228,8 @@ function Hero() {
           <h1>Own property. One block at a time.</h1>
           <p className="hero-lede">Changers helps everyday people invest in real property through smaller, transparent ownership portions. No large deposits, no unnecessary barriers - just a clearer route into long-term property wealth.</p>
           <div className="hero-actions">
-            <a className="primary-button" href="#join">Join the waitlist <ArrowRight size={17} /></a>
-            <a className="secondary-button" href="#how-it-works">See how it works</a>
+            <a className="primary-button" href="/join">Join the waitlist <ArrowRight size={17} /></a>
+            <a className="secondary-button" href="/how-it-works">See how it works</a>
           </div>
           <p className="hero-disclaimer">A developing property investment platform currently welcoming early interest. No payment is collected at this stage; investment access will follow verification, risk review, and compliance checks.</p>
           <div className="stats-row">
@@ -283,7 +323,7 @@ function AboutUs() {
             <p>{active.text}</p>
           </div>
 
-          <a className="primary-button about-cta" href="#join">
+          <a className="primary-button about-cta" href="/join">
             Join Changers <ArrowRight size={18} />
           </a>
         </div>
@@ -531,7 +571,12 @@ function VisionJoin() {
       email: String(formData.get('email') ?? ''),
       country: String(formData.get('country') ?? ''),
       investor_type: String(formData.get('investor_type') ?? 'First-time investor'),
-      message: String(formData.get('message') ?? ''),
+      message: [
+        String(formData.get('message') ?? ''),
+        `Phone: ${String(formData.get('phone') ?? 'Not provided')}`,
+        `Investment interest: ${String(formData.get('investment_interest') ?? 'Not selected')}`,
+        `Investment budget: ${String(formData.get('investment_budget') ?? 'Not selected')}`,
+      ].filter(Boolean).join('\n'),
     };
 
     setJoinStatus('loading');
@@ -572,9 +617,13 @@ function VisionJoin() {
           <form className="join-form" onSubmit={handleJoinSubmit}>
             <label>Name<input name="name" placeholder="Your full name" required /></label>
             <label>Email address<input name="email" type="email" placeholder="you@example.com" required /></label>
+            <label>Phone number<input name="phone" type="tel" placeholder="+44 7000 000000" /></label>
             <label>Country of residence<input name="country" placeholder="United Kingdom" required /></label>
-            <label>Investor type<select name="investor_type"><option>First-time investor</option><option>Young professional</option><option>Diaspora investor</option><option>Entrepreneur</option></select></label>
+            <label>Investor type<select name="investor_type">{investorTypes.map((type) => <option key={type}>{type}</option>)}</select></label>
+            <label>Investment interest<select name="investment_interest"><option>Residential Properties</option><option>Commercial Properties</option><option>Long-Term Income</option><option>Portfolio Diversification</option><option>Diaspora Investment Opportunities</option></select></label>
+            <label>Investment budget<select name="investment_budget"><option>Under £5,000</option><option>£5,000 - £25,000</option><option>£25,000 - £100,000</option><option>£100,000+</option></select></label>
             <label className="full-width">Message<textarea name="message" placeholder="Tell us what you want to achieve with property ownership." /></label>
+            <label className="full-width consent-field"><input name="consent" type="checkbox" required /> I agree to receive updates and communications from Changers Ltd.</label>
             <button type="submit" disabled={joinStatus === 'loading'}>
               {joinStatus === 'loading' ? <span className="button-spinner" aria-hidden /> : <CheckCircle2 size={17} />}
               {joinStatus === 'success' ? 'Interest received' : joinStatus === 'loading' ? 'Sending securely' : joinStatus === 'error' ? 'Try again' : 'Register your interest'}
@@ -598,6 +647,279 @@ function VisionJoin() {
       </section>
     </>
   );
+}
+
+function PageHero({ label, title, text }: { label: string; title: string; text: string }) {
+  return (
+    <section className="page-hero">
+      <p className="section-label">{label}</p>
+      <h1>{title}</h1>
+      <p>{text}</p>
+    </section>
+  );
+}
+
+function HomePage() {
+  return <><Hero /><AboutUs /><Solution /><PropertyOpportunities /><HowItWorks /><SecurityRisk /><FAQSection /><MeetTeam /><VisionJoin /></>;
+}
+
+function AboutPage() {
+  return (
+    <>
+      <PageHero
+        label="About Changers Ltd"
+        title="A UK property investment and technology company."
+        text="Changers bridges traditional property investment with modern digital infrastructure, creating transparent and accessible pathways into real estate ownership."
+      />
+      <AboutUs />
+      <section className="section page-section">
+        <div className="section-heading two-col">
+          <div>
+            <p className="section-label">Who we are</p>
+            <h2>Real ownership, not hype.</h2>
+          </div>
+          <p>
+            Changers combines real estate expertise, technology infrastructure, fractional ownership
+            models, secure investment structures, and long-term wealth creation strategies.
+          </p>
+        </div>
+        <div className="value-grid">
+          {values.map(([title, description]) => (
+            <article className="value-card lift-card" key={title}>
+              <h3>{title}</h3>
+              <p>{description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+      <MeetTeam />
+    </>
+  );
+}
+
+function VisionPage() {
+  return (
+    <>
+      <PageHero
+        label="Vision and mission"
+        title="A global gateway to property ownership."
+        text="Changers exists to make property ownership more inclusive, transparent, liquid, and accessible for local and diaspora investors."
+      />
+      <section className="section warm-section">
+        <div className="two-col">
+          <div>
+            <p className="section-label">Our vision</p>
+            <h2>Property ownership without unnecessary borders.</h2>
+          </div>
+          <div className="stacked-copy">
+            <p>Changers envisions a trusted global ecosystem where high-quality property investments are easier to access without high capital, complex processes, or geographic limitations.</p>
+            <ul className="feature-list">
+              <li>Property ownership becomes more inclusive.</li>
+              <li>Investment opportunities become more transparent.</li>
+              <li>Diaspora communities invest across borders with more confidence.</li>
+              <li>Technology simplifies the property investment experience.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+      <section className="section">
+        <div className="two-col">
+          <div>
+            <p className="section-label">Our mission</p>
+            <h2>Making property investment accessible.</h2>
+          </div>
+          <div className="mission-card">
+            <p>Changers simplifies and modernises real estate investment through secure structures, innovative technology, transparent operations, investor communication, and trusted pathways between global markets.</p>
+          </div>
+        </div>
+      </section>
+      <section className="section roadmap-section">
+        <div className="section-heading narrow">
+          <p className="section-label">Roadmap</p>
+          <h2>Building in clear phases.</h2>
+        </div>
+        <div className="roadmap-grid">
+          {roadmap.map(([phase, description]) => (
+            <article className="roadmap-card lift-card" key={phase}>
+              <span>{phase}</span>
+              <p>{description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+    </>
+  );
+}
+
+function OpportunitiesPage() {
+  return (
+    <>
+      <PageHero
+        label="Investment opportunities"
+        title="Sample property opportunities for the future platform."
+        text="Changers will publish live property opportunities only after due diligence, documentation, compliance review, and risk information are ready."
+      />
+      <PropertyOpportunities />
+      <section className="section page-section">
+        <div className="two-col">
+          <div>
+            <p className="section-label">Investment philosophy</p>
+            <h2>Real estate with a long-term perspective.</h2>
+          </div>
+          <div className="stacked-copy">
+            <p>Changers focuses on quality property selection, sustainable rental income, responsible management, strategic growth, and investor confidence.</p>
+            <p>Our focus is not short-term speculation. Our focus is long-term value.</p>
+          </div>
+        </div>
+      </section>
+      <section className="section dashboard-preview">
+        <div className="section-heading two-col">
+          <div>
+            <p className="section-label">Dashboard preview</p>
+            <h2>Track ownership with clear reporting.</h2>
+          </div>
+          <p>Future investors will be able to monitor portfolio performance, property updates, income reporting, and account progress through a secure digital experience.</p>
+        </div>
+        <div className="dashboard-grid">
+          <span>Portfolio value</span>
+          <span>Property updates</span>
+          <span>Income reporting</span>
+          <span>Verification status</span>
+        </div>
+      </section>
+    </>
+  );
+}
+
+function ServicesPage() {
+  return (
+    <>
+      <PageHero
+        label="Our services"
+        title="Modern property investment infrastructure."
+        text="Changers is being built to support property investment opportunities, fractional ownership, portfolio management, diaspora access, and secure digital investor experiences."
+      />
+      <section className="section page-section">
+        <div className="service-grid">
+          {services.map((service) => (
+            <article className="service-card lift-card" key={service.title}>
+              <Building2 size={26} />
+              <h3>{service.title}</h3>
+              <p>{service.description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+    </>
+  );
+}
+
+function HowItWorksPage() {
+  return (
+    <>
+      <PageHero
+        label="How it works"
+        title="Simple. Structured. Transparent."
+        text="The Changers journey turns property access into a clearer process, from property selection through structuring, participation, reporting, and long-term growth."
+      />
+      <HowItWorks />
+      <section className="section page-section">
+        <div className="process-grid">
+          {['Property Selection', 'Investment Structuring', 'Investor Participation', 'Income Distribution', 'Long-Term Growth'].map((item, index) => (
+            <article className="process-card lift-card" key={item}>
+              <span>0{index + 1}</span>
+              <h3>{item}</h3>
+              <p>{[
+                'The team identifies and evaluates property opportunities based on location, income potential, and long-term value.',
+                'Properties are placed into professionally managed structures designed for investor participation.',
+                'Investors participate through fractional ownership or structured investment units when live access opens.',
+                'Rental income and performance updates are handled according to the terms of each opportunity.',
+                'Investors can benefit from long-term property appreciation and portfolio growth, with capital at risk.',
+              ][index]}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+    </>
+  );
+}
+
+function TrustPage() {
+  return (
+    <>
+      <PageHero
+        label="Compliance and trust"
+        title="Built with structure and responsibility."
+        text="Changers prioritises investor transparency, proper structures, AML and KYC procedures, data protection, and responsible operational governance."
+      />
+      <SecurityRisk />
+      <section className="section legal-section">
+        <div className="section-heading two-col">
+          <div>
+            <p className="section-label">Legal disclaimer</p>
+            <h2>Information first. No investment advice.</h2>
+          </div>
+          <p>The information on this website is for informational purposes only and does not constitute financial, legal, or investment advice. Investments involve risk, including potential loss of capital. Participation may be subject to eligibility requirements and applicable regulations.</p>
+        </div>
+      </section>
+    </>
+  );
+}
+
+function FAQPage() {
+  return <><PageHero label="FAQ" title="Frequently asked questions." text="Clear answers about Changers, fractional ownership, risk, income, international access, and data handling." /><FAQSection /></>;
+}
+
+function JoinPage() {
+  return (
+    <>
+      <PageHero
+        label="Join Changers"
+        title="Start your ownership journey."
+        text="Join the Changers community and register your interest in future property ownership opportunities, investor updates, and platform access."
+      />
+      <VisionJoin />
+      <section className="section membership-section">
+        <div className="section-heading two-col">
+          <div>
+            <p className="section-label">Future membership options</p>
+            <h2>Access levels can be introduced when onboarding is ready.</h2>
+          </div>
+          <p>Membership or onboarding fees are not being collected on this website. Any future fee structure will be introduced with clear terms, eligibility checks, and compliance review.</p>
+        </div>
+        <div className="membership-grid">
+          {[
+            ['Standard Membership', 'Investor updates, community membership, and early property notifications.'],
+            ['Premium Investor Membership', 'Priority communications, investor webinars, reports, and dedicated support options.'],
+            ['Institutional / Strategic Partner Access', 'Custom onboarding, partnership discussions, and tailored investment support.'],
+          ].map(([title, description]) => (
+            <article className="membership-card lift-card" key={title}>
+              <h3>{title}</h3>
+              <p>{description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+    </>
+  );
+}
+
+function NotFoundPage() {
+  return <><PageHero label="Page not found" title="This Changers page is still being built." text="Return home or join the waitlist to follow the platform as it develops." /><section className="section page-section"><a className="primary-button" href="/">Back to home <ArrowRight size={17} /></a></section></>;
+}
+
+function CurrentPage() {
+  const path = window.location.pathname.replace(/\/$/, '') || '/';
+  if (path === '/') return <HomePage />;
+  if (path === '/about') return <AboutPage />;
+  if (path === '/vision') return <VisionPage />;
+  if (path === '/opportunities') return <OpportunitiesPage />;
+  if (path === '/how-it-works') return <HowItWorksPage />;
+  if (path === '/services') return <ServicesPage />;
+  if (path === '/trust') return <TrustPage />;
+  if (path === '/faq') return <FAQPage />;
+  if (path === '/join') return <JoinPage />;
+  return <NotFoundPage />;
 }
 
 function Chatbot() {
@@ -644,7 +966,7 @@ function Chatbot() {
           </div>
 
           <div className="chatbot-footer">
-            <a href="#join" onClick={() => setIsOpen(false)}>
+            <a href="/join" onClick={() => setIsOpen(false)}>
               Register your interest <ArrowRight size={16} />
             </a>
             <p>No payments are collected through this assistant.</p>
@@ -668,9 +990,9 @@ function Chatbot() {
 }
 
 function Footer() {
-  return <footer className="footer"><Logo /><nav>{navLinks.map((link) => <a key={link.href} href={link.href}>{link.label}</a>)}</nav><p>© 2026 Changers</p></footer>;
+  return <footer className="footer"><Logo /><nav>{navLinks.map((link) => <a key={link.href} href={link.href}>{link.label}</a>)}<a href="/trust">Trust</a></nav><p>© 2026 Changers</p></footer>;
 }
 
 export default function App() {
-  return <><Header /><main><Hero /><AboutUs /><Solution /><PropertyOpportunities /><HowItWorks /><SecurityRisk /><FAQSection /><MeetTeam /><VisionJoin /></main><Chatbot /><Footer /></>;
+  return <><Header /><main><CurrentPage /></main><Chatbot /><Footer /></>;
 }
