@@ -566,17 +566,31 @@ function VisionJoin() {
 
     const form = event.currentTarget;
     const formData = new FormData(form);
+    const name = String(formData.get('name') ?? '').trim();
+    const email = String(formData.get('email') ?? '').trim();
+    const country = String(formData.get('country') ?? '').trim();
+    const phone = String(formData.get('phone') ?? '').trim();
+    const investorType = String(formData.get('investor_type') ?? 'Individual Investor');
+    const investmentInterest = String(formData.get('investment_interest') ?? 'Residential Properties');
+    const investmentBudget = String(formData.get('investment_budget') ?? 'Under £5,000');
+    const message = String(formData.get('message') ?? '').trim();
+    const hasConsent = formData.get('consent') === 'on';
+
     const lead = {
-      name: String(formData.get('name') ?? ''),
-      email: String(formData.get('email') ?? ''),
-      country: String(formData.get('country') ?? ''),
-      investor_type: String(formData.get('investor_type') ?? 'First-time investor'),
-      message: [
-        String(formData.get('message') ?? ''),
-        `Phone: ${String(formData.get('phone') ?? 'Not provided')}`,
-        `Investment interest: ${String(formData.get('investment_interest') ?? 'Not selected')}`,
-        `Investment budget: ${String(formData.get('investment_budget') ?? 'Not selected')}`,
-      ].filter(Boolean).join('\n'),
+      full_name: name,
+      name,
+      email,
+      phone,
+      country,
+      investor_type: investorType,
+      investment_interest: investmentInterest,
+      investment_budget: investmentBudget,
+      message,
+      consent_marketing: hasConsent,
+      consent_at: hasConsent ? new Date().toISOString() : null,
+      source: 'website_join_form',
+      page_path: window.location.pathname,
+      form_version: '2026-06-15',
     };
 
     setJoinStatus('loading');
