@@ -64,10 +64,17 @@ h2 { margin: 14px 0 0; font-size: clamp(36px, 5vw, 58px); line-height: 1.05; let
 .section { padding: 92px 24px; }
 .section > * { max-width: 1200px; margin-left: auto; margin-right: auto; }
 .page-hero { padding: 104px 24px 76px; background: radial-gradient(circle at 88% 12%, rgba(244, 199, 107, .28), transparent 24rem), #102f2a; color: white; }
-.page-hero > * { max-width: 1040px; margin-left: auto; margin-right: auto; }
+.page-hero-content { max-width: 1040px; margin-left: auto; margin-right: auto; }
 .page-hero .section-label { color: #f4c76b; }
 .page-hero h1 { max-width: 900px; margin-top: 24px; font-size: clamp(46px, 6vw, 76px); }
 .page-hero p:not(.section-label) { margin-top: 24px; max-width: 760px; color: #efe7d9; font-size: 20px; line-height: 1.65; font-weight: 650; }
+.visual-page-hero { padding-top: 78px; padding-bottom: 58px; }
+.visual-page-hero .page-hero-content { display: grid; grid-template-columns: .92fr .78fr; gap: 52px; align-items: center; max-width: 1200px; }
+.visual-page-hero h1 { max-width: 640px; }
+.visual-page-hero p:not(.section-label) { max-width: 620px; }
+.page-hero-image { position: relative; border: 1px solid rgba(255,255,255,.18); border-radius: 10px; background: #f8f4ed; padding: 16px; box-shadow: 0 28px 80px rgba(0,0,0,.28); }
+.page-hero-image::before { content: ""; position: absolute; inset: 24px -12px -12px 34px; border-radius: 10px; border: 1px solid rgba(244,199,107,.35); z-index: 0; }
+.page-hero-image img { position: relative; z-index: 1; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 7px; }
 .page-section { background: #fff; }
 .stacked-copy { display: grid; gap: 18px; }
 .stacked-copy p { margin: 0; color: #60706a; font-size: 18px; line-height: 1.75; }
@@ -264,6 +271,8 @@ blockquote cite { display: block; margin-top: 24px; color: #7a2418; font-size: 1
   .mobile-nav a { border-radius: 8px; padding: 12px; color: #56645f; font-weight: 850; }
   .mobile-cta { color: white !important; }
   .hero-content, .about-grid, .two-col, .join-grid, .trust-block, .quote-row, .security-grid { grid-template-columns: 1fr; }
+  .visual-page-hero .page-hero-content { grid-template-columns: 1fr; gap: 34px; }
+  .page-hero-image { max-width: 620px; }
   .hero-content { padding-top: 78px; padding-bottom: 78px; }
   .about-grid { gap: 48px; }
   .about-visual-card { min-height: 520px; }
@@ -294,7 +303,10 @@ blockquote cite { display: block; margin-top: 24px; color: #7a2418; font-size: 1
   .hero-lede { font-size: 18px; }
   .hero-actions, .primary-button, .secondary-button { width: 100%; }
   .page-hero { padding: 78px 16px 58px; }
+  .visual-page-hero { padding-top: 64px; }
   .page-hero p:not(.section-label) { font-size: 18px; }
+  .page-hero-image { padding: 10px; }
+  .page-hero-image::before { inset: 16px -6px -6px 18px; }
   .stats-row, .panel-features, .benefit-grid, .step-grid, .mini-grid, .audience-grid, .join-form, .security-card-grid, .property-grid, .faq-grid, .team-grid, .value-grid, .service-grid, .roadmap-grid, .dashboard-grid, .membership-grid, .process-grid { grid-template-columns: 1fr; }
   .timeline-card { padding-left: 62px; }
   .property-image { height: 210px; }

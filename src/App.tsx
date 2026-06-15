@@ -649,12 +649,33 @@ function VisionJoin() {
   );
 }
 
-function PageHero({ label, title, text }: { label: string; title: string; text: string }) {
+function PageHero({
+  label,
+  title,
+  text,
+  image,
+  imageAlt,
+}: {
+  label: string;
+  title: string;
+  text: string;
+  image?: string;
+  imageAlt?: string;
+}) {
   return (
-    <section className="page-hero">
-      <p className="section-label">{label}</p>
-      <h1>{title}</h1>
-      <p>{text}</p>
+    <section className={image ? 'page-hero visual-page-hero' : 'page-hero'}>
+      <div className="page-hero-content">
+        <div>
+          <p className="section-label">{label}</p>
+          <h1>{title}</h1>
+          <p>{text}</p>
+        </div>
+        {image && (
+          <div className="page-hero-image">
+            <img src={image} alt={imageAlt ?? ''} />
+          </div>
+        )}
+      </div>
     </section>
   );
 }
@@ -821,6 +842,8 @@ function HowItWorksPage() {
         label="How it works"
         title="Simple. Structured. Transparent."
         text="The Changers journey turns property access into a clearer process, from property selection through structuring, participation, reporting, and long-term growth."
+        image="/hero-blocks.png"
+        imageAlt="A modular property model being assembled block by block"
       />
       <HowItWorks />
       <section className="section page-section">
