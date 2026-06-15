@@ -87,6 +87,10 @@ In Supabase:
 
 Until SMS is configured, the dashboard shows phone verification as pending.
 
+The dashboard includes a phone-code UI that calls Supabase `updateUser({ phone })` and
+`verifyOtp({ type: 'phone_change' })`. It will show a setup error until Phone Auth and an SMS
+provider are configured.
+
 ## 5. Key safety
 
 Use only the publishable/anon key in the browser.

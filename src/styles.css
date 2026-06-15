@@ -113,6 +113,16 @@ h2 { margin: 14px 0 0; font-size: clamp(36px, 5vw, 58px); line-height: 1.05; let
 .dashboard-notice { margin: 0; border-radius: 8px; padding: 12px 14px; font-weight: 850; }
 .dashboard-notice.success { background: #edf7f0; color: #173b35; }
 .dashboard-notice.error { background: #fff3ee; color: #7a2418; }
+.dashboard-workspace { display: grid; grid-template-columns: 1.25fr .75fr; gap: 24px; margin-top: 24px; align-items: start; }
+.dashboard-profile-card, .dashboard-phone-card { display: grid; gap: 20px; border: 1px solid #e3d6c4; border-radius: 8px; background: white; padding: 28px; box-shadow: 0 14px 42px rgba(24, 35, 31, .07); }
+.dashboard-profile-card h2, .dashboard-phone-card h2 { margin-top: 10px; font-size: clamp(28px, 4vw, 42px); }
+.dashboard-profile-card p:not(.section-label), .dashboard-phone-card p:not(.section-label) { margin: 10px 0 0; color: #60706a; line-height: 1.65; }
+.dashboard-form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.dashboard-form-grid label, .phone-code-form label { display: grid; gap: 8px; color: #34433f; font-weight: 850; }
+.dashboard-form-grid input, .dashboard-form-grid select, .phone-code-form input { width: 100%; border: 1px solid #d8c8b2; border-radius: 6px; background: white; color: #17231f; padding: 13px 14px; outline: none; }
+.dashboard-profile-card button, .dashboard-phone-card button { justify-self: start; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 8px; background: #7a2418; color: white; padding: 13px 17px; font-weight: 900; cursor: pointer; }
+.dashboard-phone-card button:disabled, .dashboard-profile-card button:disabled { cursor: not-allowed; opacity: .72; }
+.phone-code-form { display: grid; gap: 14px; }
 .company-section { background: #fff; }
 .company-grid { display: grid; grid-template-columns: .85fr 1.15fr; gap: 24px; margin-top: 42px; align-items: stretch; }
 .company-card { border: 1px solid #e3d6c4; border-radius: 8px; background: #fbf6ee; padding: 28px; }
@@ -307,7 +317,7 @@ blockquote cite { display: block; margin-top: 24px; color: #7a2418; font-size: 1
   .timeline-grid::before { left: 24px; right: auto; top: 18px; bottom: 18px; width: 2px; height: auto; background: linear-gradient(180deg, rgba(244,199,107,.9), transparent); }
   .timeline-card { padding-left: 72px; }
   .timeline-icon { position: absolute; left: 0; top: 18px; box-shadow: 0 0 0 8px #102f2a; }
-  .benefit-grid, .step-grid, .security-card-grid, .property-grid, .faq-grid, .team-grid, .value-grid, .service-grid, .roadmap-grid, .dashboard-grid, .membership-grid, .process-grid, .dashboard-status-grid, .company-grid { grid-template-columns: repeat(2, 1fr); }
+  .benefit-grid, .step-grid, .security-card-grid, .property-grid, .faq-grid, .team-grid, .value-grid, .service-grid, .roadmap-grid, .dashboard-grid, .membership-grid, .process-grid, .dashboard-status-grid, .company-grid, .dashboard-workspace { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 620px) {
   .header-inner { padding: 14px 16px; }
@@ -334,7 +344,7 @@ blockquote cite { display: block; margin-top: 24px; color: #7a2418; font-size: 1
   .page-hero p:not(.section-label) { font-size: 18px; }
   .page-hero-image { padding: 10px; }
   .page-hero-image::before { inset: 16px -6px -6px 18px; }
-  .stats-row, .panel-features, .benefit-grid, .step-grid, .mini-grid, .audience-grid, .join-form, .security-card-grid, .property-grid, .faq-grid, .team-grid, .value-grid, .service-grid, .roadmap-grid, .dashboard-grid, .membership-grid, .process-grid, .dashboard-status-grid, .company-grid { grid-template-columns: 1fr; }
+  .stats-row, .panel-features, .benefit-grid, .step-grid, .mini-grid, .audience-grid, .join-form, .security-card-grid, .property-grid, .faq-grid, .team-grid, .value-grid, .service-grid, .roadmap-grid, .dashboard-grid, .membership-grid, .process-grid, .dashboard-status-grid, .company-grid, .dashboard-workspace, .dashboard-form-grid { grid-template-columns: 1fr; }
   .dashboard-panel { align-items: flex-start; flex-direction: column; }
   .timeline-card { padding-left: 62px; }
   .property-image { height: 210px; }

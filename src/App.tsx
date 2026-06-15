@@ -179,6 +179,24 @@ const companyDetails = {
   mapUrl: 'https://www.openstreetmap.org/export/embed.html?bbox=-1.1588%2C53.4944%2C-1.1508%2C53.4994&layer=mapnik&marker=53.4969%2C-1.1548',
 };
 
+type ProfileForm = {
+  full_name: string;
+  phone: string;
+  country: string;
+  investor_type: string;
+  investment_interest: string;
+  investment_budget: string;
+};
+
+const defaultProfileForm: ProfileForm = {
+  full_name: '',
+  phone: '',
+  country: '',
+  investor_type: 'Individual Investor',
+  investment_interest: 'Residential Properties',
+  investment_budget: 'Under £5,000',
+};
+
 function useSupabaseUser() {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(Boolean(isSupabaseConfigured));
@@ -1038,22 +1056,53 @@ function DashboardPage() {
   const [email, setEmail] = useState('');
   const [authStatus, setAuthStatus] = useState<'idle' | 'loading' | 'sent' | 'error'>('idle');
   const [profileStatus, setProfileStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [profileForm, setProfileForm] = useState<ProfileForm>(defaultProfileForm);
+  const [phoneOtp, setPhoneOtp] = useState('');
+  const [phoneStatus, setPhoneStatus] = useState<'idle' | 'sending' | 'sent' | 'verifying' | 'verified' | 'error'>('idle');
 
   useEffect(() => {
     if (!supabase || !user) return;
 
+    const client = supabase;
+    const userId = user.id;
     setProfileStatus('saving');
-    supabase
-      .from('profiles')
-      .upsert({
-        id: user.id,
+    const baseProfile = {
+        id: userId,
         email: user.email ?? null,
         phone: user.phone ?? null,
         email_verified_at: user.email_confirmed_at ?? null,
         phone_verified_at: user.phone_confirmed_at ?? null,
-      })
-      .then(({ error }) => {
-        setProfileStatus(error ? 'error' : 'saved');
+    };
+
+    client
+      .from('profiles')
+      .upsert(baseProfile)
+      .then(async ({ error }) => {
+        if (error) {
+          setProfileStatus('error');
+          return;
+        }
+
+        const { data, error: profileError } = await client
+          .from('profiles')
+          .select('full_name, phone, country, investor_type, investment_interest, investment_budget')
+          .eq('id', userId)
+          .single();
+
+        if (profileError) {
+          setProfileStatus('error');
+          return;
+        }
+
+        setProfileForm({
+          full_name: data?.full_name ?? '',
+          phone: data?.phone ?? user.phone ?? '',
+          country: data?.country ?? '',
+          investor_type: data?.investor_type ?? 'Individual Investor',
+          investment_interest: data?.investment_interest ?? 'Residential Properties',
+          investment_budget: data?.investment_budget ?? 'Under £5,000',
+        });
+        setProfileStatus('saved');
       });
   }, [user]);
 
@@ -1074,6 +1123,62 @@ function DashboardPage() {
 
   const handleSignOut = async () => {
     await supabase?.auth.signOut();
+  };
+
+  const updateProfileField = (field: keyof ProfileForm, value: string) => {
+    setProfileForm((current) => ({ ...current, [field]: value }));
+  };
+
+  const handleProfileSave = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!supabase || !user) return;
+
+    setProfileStatus('saving');
+    const { error } = await supabase
+      .from('profiles')
+      .update({
+        ...profileForm,
+        phone: profileForm.phone.trim() || null,
+        full_name: profileForm.full_name.trim() || null,
+        country: profileForm.country.trim() || null,
+      })
+      .eq('id', user.id);
+
+    setProfileStatus(error ? 'error' : 'saved');
+  };
+
+  const handleSendPhoneCode = async () => {
+    if (!supabase || !profileForm.phone.trim()) return;
+
+    setPhoneStatus('sending');
+    const { error } = await supabase.auth.updateUser({ phone: profileForm.phone.trim() });
+    setPhoneStatus(error ? 'error' : 'sent');
+  };
+
+  const handleVerifyPhoneCode = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!supabase || !profileForm.phone.trim() || !phoneOtp.trim()) return;
+    if (!user) return;
+
+    const userId = user.id;
+    setPhoneStatus('verifying');
+    const { error } = await supabase.auth.verifyOtp({
+      phone: profileForm.phone.trim(),
+      token: phoneOtp.trim(),
+      type: 'phone_change',
+    });
+
+    if (error) {
+      setPhoneStatus('error');
+      return;
+    }
+
+    await supabase
+      .from('profiles')
+      .update({ phone: profileForm.phone.trim(), phone_verified_at: new Date().toISOString() })
+      .eq('id', userId);
+
+    setPhoneStatus('verified');
   };
 
   if (!isSupabaseConfigured) {
@@ -1159,6 +1264,49 @@ function DashboardPage() {
             <h3>Property access</h3>
             <p>Coming after onboarding and compliance checks</p>
           </article>
+        </div>
+        <div className="dashboard-workspace">
+          <form className="dashboard-profile-card" onSubmit={handleProfileSave}>
+            <div>
+              <p className="section-label">Profile</p>
+              <h2>Complete your investor profile.</h2>
+              <p>Keep your details current so Changers can prepare the right onboarding pathway.</p>
+            </div>
+            <div className="dashboard-form-grid">
+              <label>Full name<input value={profileForm.full_name} onChange={(event) => updateProfileField('full_name', event.target.value)} placeholder="Your full name" /></label>
+              <label>Phone number<input value={profileForm.phone} onChange={(event) => updateProfileField('phone', event.target.value)} type="tel" placeholder="+44 7000 000000" /></label>
+              <label>Country<input value={profileForm.country} onChange={(event) => updateProfileField('country', event.target.value)} placeholder="United Kingdom" /></label>
+              <label>Investor type<select value={profileForm.investor_type} onChange={(event) => updateProfileField('investor_type', event.target.value)}>{investorTypes.map((type) => <option key={type}>{type}</option>)}</select></label>
+              <label>Investment interest<select value={profileForm.investment_interest} onChange={(event) => updateProfileField('investment_interest', event.target.value)}><option>Residential Properties</option><option>Commercial Properties</option><option>Long-Term Income</option><option>Portfolio Diversification</option><option>Diaspora Investment Opportunities</option></select></label>
+              <label>Investment budget<select value={profileForm.investment_budget} onChange={(event) => updateProfileField('investment_budget', event.target.value)}><option>Under £5,000</option><option>£5,000 - £25,000</option><option>£25,000 - £100,000</option><option>£100,000+</option></select></label>
+            </div>
+            <button type="submit" disabled={profileStatus === 'saving'}>
+              {profileStatus === 'saving' ? <span className="button-spinner" aria-hidden /> : <CheckCircle2 size={17} />}
+              Save profile
+            </button>
+            {profileStatus === 'saved' && <p className="dashboard-notice success">Profile saved securely.</p>}
+            {profileStatus === 'error' && <p className="dashboard-notice error">Profile could not be saved yet. Check Supabase policies and table setup.</p>}
+          </form>
+
+          <div className="dashboard-phone-card">
+            <p className="section-label">Phone verification</p>
+            <h2>Verify your phone number.</h2>
+            <p>Once Phone Auth and an SMS provider are enabled in Supabase, Changers can send a one-time code to confirm this number.</p>
+            <button type="button" onClick={handleSendPhoneCode} disabled={phoneStatus === 'sending' || !profileForm.phone.trim()}>
+              {phoneStatus === 'sending' ? <span className="button-spinner" aria-hidden /> : <Send size={17} />}
+              Send phone code
+            </button>
+            <form className="phone-code-form" onSubmit={handleVerifyPhoneCode}>
+              <label>Verification code<input value={phoneOtp} onChange={(event) => setPhoneOtp(event.target.value)} inputMode="numeric" placeholder="6-digit code" /></label>
+              <button type="submit" disabled={phoneStatus === 'verifying' || !phoneOtp.trim()}>
+                {phoneStatus === 'verifying' ? <span className="button-spinner" aria-hidden /> : <BadgeCheck size={17} />}
+                Verify code
+              </button>
+            </form>
+            {phoneStatus === 'sent' && <p className="dashboard-notice success">Code sent. Enter it here to verify your number.</p>}
+            {phoneStatus === 'verified' && <p className="dashboard-notice success">Phone number verified.</p>}
+            {phoneStatus === 'error' && <p className="dashboard-notice error">Phone verification is not ready yet. Enable Phone Auth and an SMS provider in Supabase.</p>}
+          </div>
         </div>
       </section>
     </>
