@@ -842,8 +842,8 @@ function HowItWorksPage() {
         label="How it works"
         title="Simple. Structured. Transparent."
         text="The Changers journey turns property access into a clearer process, from property selection through structuring, participation, reporting, and long-term growth."
-        image="/hero-blocks.png"
-        imageAlt="A modular property model being assembled block by block"
+        image="https://images.unsplash.com/photo-1560520031-3a4dc4e9de0c?auto=format&fit=crop&w=1200&q=80"
+        imageAlt="Modern apartment building representing structured property investment"
       />
       <HowItWorks />
       <section className="section page-section">
