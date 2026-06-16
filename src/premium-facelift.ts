@@ -110,20 +110,43 @@ function applyCalculator() {
   update();
 }
 
+function mountPremiumFacelift() {
+  const heroTitle = document.querySelector<HTMLElement>('.hero h1');
+  const heroLede = document.querySelector<HTMLElement>('.hero-lede');
+  const hero = document.querySelector<HTMLElement>('.hero');
+
+  if (!hero) return false;
+
+  document.body.classList.add('premium-facelift-active');
+
+  if (heroTitle) heroTitle.textContent = 'Property ownership without the old barriers.';
+  if (heroLede) {
+    heroLede.textContent = 'Changers is building a premium, trust-first route for everyday and diaspora investors to access real property opportunities through smaller, transparent ownership blocks.';
+  }
+
+  if (!document.querySelector('.premium-trust-strip')) {
+    hero.insertAdjacentHTML('afterend', buildPremiumSections());
+  }
+
+  applyCalculator();
+  return true;
+}
+
 export function applyPremiumFacelift() {
-  window.setTimeout(() => {
-    const heroTitle = document.querySelector<HTMLElement>('.hero h1');
-    const heroLede = document.querySelector<HTMLElement>('.hero-lede');
-    const hero = document.querySelector<HTMLElement>('.hero');
+  const tryMount = () => mountPremiumFacelift();
 
-    if (heroTitle) heroTitle.textContent = 'Property ownership without the old barriers.';
-    if (heroLede) {
-      heroLede.textContent = 'Changers is building a premium, trust-first route for everyday and diaspora investors to access real property opportunities through smaller, transparent ownership blocks.';
-    }
+  tryMount();
+  window.setTimeout(tryMount, 100);
+  window.setTimeout(tryMount, 500);
+  window.setTimeout(tryMount, 1200);
 
-    if (hero && !document.querySelector('.premium-trust-strip')) {
-      hero.insertAdjacentHTML('afterend', buildPremiumSections());
-      applyCalculator();
-    }
-  }, 80);
+  window.addEventListener('load', tryMount);
+  document.addEventListener('DOMContentLoaded', tryMount);
+
+  const observer = new MutationObserver(() => {
+    if (!document.querySelector('.premium-trust-strip')) tryMount();
+  });
+
+  const root = document.getElementById('root') ?? document.body;
+  observer.observe(root, { childList: true, subtree: true });
 }
