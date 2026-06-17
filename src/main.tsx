@@ -1,9 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import PremiumChangersSite from './PremiumChangersSite'
+import App from './App'
+import { applyPremiumFacelift } from './premium-facelift'
+import './styles.css'
+import './premium-facelift.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <PremiumChangersSite />
+    <App />
   </React.StrictMode>,
 )
+
+applyPremiumFacelift()
